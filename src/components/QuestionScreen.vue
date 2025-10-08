@@ -52,68 +52,58 @@
           </div>
 
           <div :class="['question-content', 'question-' + question.id]">
-            <div class="question-text">
-              <div class="question-number">Question {{ currentQuestionIndex + 1 }}</div>
+            <!-- Question Text Container -->
+            <div class="question-text-container">
               <h2 class="question-proper" v-html="question.text"></h2>
             </div>
+            
+            <!-- Answer Options Grid -->
+            <div class="answer-options-grid">
+              <!-- First row - left aligned -->
+              <div class="answer-option-row-1">
+                <div
+                  v-for="(option, index) in question.options.slice(0, 3)"
+                  :key="index"
+                  class="answer-option-skewed"
+                  :class="{
+                    'selected': selectedAnswer === option,
+                    'correct': showExplanation && option === question.correctAnswer,
+                    'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
+                    'faded': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
+                  }"
+                  @click="!showExplanation && handleAnswer(option)"
+                >
+                  <div class="option-text" v-html="option"></div>
+                  <div v-if="showExplanation && option === question.correctAnswer" class="check-mark">✓</div>
+                  <div v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" class="x-mark">✗</div>
+                </div>
+              </div>
+              
+              <!-- Second row - right aligned -->
+              <div class="answer-option-row-2" v-if="question.options.length > 3">
+                <div
+                  v-for="(option, index) in question.options.slice(3)"
+                  :key="index + 3"
+                  class="answer-option-skewed"
+                  :class="{
+                    'selected': selectedAnswer === option,
+                    'correct': showExplanation && option === question.correctAnswer,
+                    'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
+                    'faded': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
+                  }"
+                  @click="!showExplanation && handleAnswer(option)"
+                >
+                  <div class="option-text" v-html="option"></div>
+                  <div v-if="showExplanation && option === question.correctAnswer" class="check-mark">✓</div>
+                  <div v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" class="x-mark">✗</div>
+                </div>
+              </div>
+            </div>
+            
             <div class="question-wrapper" :class="{ 'show-explanation': showExplanation, 'centered-wrapper': !selectedAnswer && timeRemaining > 0 }">
               <div class="question-with-answers row mb-4">
                 <div class="col-12">
                   <div class="question-container" :class="{ 'centered-container': !selectedAnswer && timeRemaining > 0 }">
-                    <div class="options">
-                      <div
-                        v-for="(option, index) in question.options"
-                        :key="option"
-                        class="question-option-wrapper"
-                      >
-                        <!-- Clickable indicator container -->
-                        <div 
-                          class="indicator-container"
-                          @click="!showExplanation && handleAnswer(option)"
-                        >
-                          <img 
-                            :src="`/light${index + 1}.png`" 
-                            :alt="`Option ${index + 1}`" 
-                            class="light-indicator" 
-                            :class="{
-                              'faded-option-img': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
-                            }"
-                          />
-                          <span v-if="showExplanation && option === question.correctAnswer" class="check-icon"><img src="/CHECK.png"></span>
-                          <span v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" class="x-icon"><img src="/X.png"></span>
-                        </div>
-                        <div
-                          class="question-option"
-                          :class="{
-                            'selected': selectedAnswer === option,
-                            'correct-orange': showExplanation && option === question.correctAnswer && index === 0,
-                            'correct-teal': showExplanation && option === question.correctAnswer && index === 1,
-                            'correct-purple': showExplanation && option === question.correctAnswer && index === 2,
-                            'correct-blue': showExplanation && option === question.correctAnswer && index === 3,
-                            'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
-                            'show-correct': showExplanation && option === question.correctAnswer && selectedAnswer !== question.correctAnswer,
-                            'option-orange': index === 0,
-                            'option-teal': index === 1,
-                            'option-purple': index === 2,
-                            'option-blue': index === 3,
-                            'faded-option': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
-                          }"
-                          @click="!showExplanation && handleAnswer(option)"
-                        >
-                          <div class="option-content">
-                            <template v-if="(showExplanation || selectedAnswer) && option === question.correctAnswer && [1, 2, 3, 5, 7, 8, 14, 19].includes(question.id)">
-                              <img :src="'/question-' + question.id + '-correct.png'" alt="Correct answer image" />
-                            </template>
-                            <span 
-                              v-else
-                              class="option-text"
-                              :style="getTextStyle()"
-                              v-html="(showExplanation || selectedAnswer) ? option : option.replace(/<sup>.*?<\/sup>/g, '')"
-                            ></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -145,16 +135,6 @@
                 </div>
               </transition>
             </div>
-            <div class="timer-dial">
-              <GaugeTimer :timeRemaining="timeRemaining" :maxTime="30" />
-            </div>
-            <transition v-if="showNotes" name="fade">
-              <div class="question-faq-notes">Notes</div>
-            </transition>
-            <div 
-              class="wheel"
-              :style="{ backgroundImage: `url('/${valveImage}.png')` }"
-            ></div>
           </div>
         </div>
         <transition name="fade">
@@ -589,28 +569,114 @@ h2 {
   letter-spacing: -1px;
 }
 
+/* Question Text Container */
+.question-text-container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px 40px;
+  margin: 80px auto 40px auto;
+  max-width: 800px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Answer Options Grid */
+.answer-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
+}
+
+/* First row - left aligned */
+.answer-options-grid .answer-option-row-1 {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+/* Second row - right aligned */
+.answer-options-grid .answer-option-row-2 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+/* Skewed Answer Options */
+.answer-option-skewed {
+  width: 492.751px;
+  height: 98px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #25575F;
+  transform: skew(-15deg);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin: 10px 0;
+}
+
+.answer-option-skewed:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: skew(-15deg) translateY(-2px);
+}
+
+.answer-option-skewed .option-text {
+  transform: skew(15deg);
+  font-size: 18px;
+  font-weight: 600;
+  color: #25575F;
+  text-align: center;
+  padding: 0 20px;
+  line-height: 1.3;
+}
+
+.answer-option-skewed.selected {
+  background: rgba(37, 87, 95, 0.1);
+  border-color: #25575F;
+  box-shadow: 0 0 15px rgba(37, 87, 95, 0.3);
+}
+
+.answer-option-skewed.correct {
+  background: rgba(40, 167, 69, 0.1) !important;
+  border-color: #28A745 !important;
+}
+
+.answer-option-skewed.incorrect {
+  background: rgba(220, 53, 69, 0.1) !important;
+  border-color: #DC3545 !important;
+}
+
+.answer-option-skewed.faded {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.check-mark, .x-mark {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  transform: skew(15deg);
+}
+
+.check-mark {
+  color: #28A745;
+}
+
+.x-mark {
+  color: #DC3545;
+}
+
 .question-content {
-  max-width: 61%;
+  max-width: 100%;
   padding-top: 50px;
 }
 
-.timer-dial {
-  position: absolute;
-  right: 62px;
-  top: 243px;
-  zoom: 2.1;
-}
-
-.wheel {
-  position: absolute;
-  height: 266px;
-  width: 216px;
-  background-size: 100% 100%;
-  background-position: center;
-  top: 477px;
-  right: 566px;
-  transition: background-image 0.3s ease;
-}
 
 .gentle-shake {
   animation: gentle-shake 3s infinite;
