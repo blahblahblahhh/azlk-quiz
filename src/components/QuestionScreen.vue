@@ -10,6 +10,8 @@
       preload="metadata"
       @loadeddata="onVideoLoaded"
       @canplaythrough="onVideoCanPlay"
+      @error="onVideoError"
+      @loadstart="onVideoLoadStart"
     >
       <source src="/walking-video.mp4" type="video/mp4">
     </video>
@@ -191,6 +193,8 @@ const backgroundVideo = ref(null);
 const videoTimeout = ref(null);
 const timeUpdateHandler = ref(null);
 const videoReady = ref(false);
+const videoLoadFailed = ref(false);
+const videoLoadAttempts = ref(0);
 const showQuestionContent = ref(false);
 const videoIntroComplete = ref(false);
 
@@ -363,6 +367,11 @@ const valveShakeDuration = computed(() => {
 });
 
 // Video event handlers
+function onVideoLoadStart() {
+  console.log('Video load started');
+  videoLoadAttempts.value++;
+}
+
 function onVideoLoaded() {
   console.log('Video metadata loaded');
   // Don't automatically reset currentTime here - let startVideoIntro handle positioning
@@ -371,6 +380,23 @@ function onVideoLoaded() {
 function onVideoCanPlay() {
   console.log('Video can play through');
   videoReady.value = true;
+  videoLoadFailed.value = false;
+}
+
+function onVideoError(event) {
+  console.error('Video loading error:', event);
+  videoLoadFailed.value = true;
+  videoReady.value = false;
+  
+  // If video fails, immediately show question content and start timer
+  if (!showQuestionContent.value) {
+    console.log('Video failed to load, falling back to immediate question display');
+    showQuestionContent.value = true;
+    videoIntroComplete.value = true;
+    setTimeout(() => {
+      gameStore.startTimer();
+    }, 500);
+  }
 }
 
 // Video segment mapping for each question
@@ -390,6 +416,17 @@ function getVideoSegment(questionIndex) {
 
 // Video control functions
 function startVideoIntro() {
+  // If video has failed to load or too many attempts, skip video and show content immediately
+  if (videoLoadFailed.value || videoLoadAttempts.value > 50) {
+    console.log('Video unavailable, showing question content immediately');
+    showQuestionContent.value = true;
+    videoIntroComplete.value = true;
+    setTimeout(() => {
+      gameStore.startTimer();
+    }, 500);
+    return;
+  }
+  
   if (backgroundVideo.value && videoReady.value) {
     if (videoTimeout.value) {
       clearTimeout(videoTimeout.value);
@@ -431,7 +468,7 @@ function startVideoIntro() {
     backgroundVideo.value.play().then(() => {
       console.log(`Video segment started playing from ${segment.start}s`);
     }).catch(console.error);
-  } else if (!videoReady.value) {
+  } else if (!videoReady.value && videoLoadAttempts.value <= 50) {
     console.log('Video not ready yet, waiting...');
     setTimeout(() => startVideoIntro(), 100);
   }
