@@ -7,11 +7,9 @@
       class="background-video"
       muted
       playsinline
-      preload="metadata"
-      @loadeddata="onVideoLoaded"
-      @canplaythrough="onVideoCanPlay"
+      preload="auto"
+      @canplaythrough="onVideoReady"
       @error="onVideoError"
-      @loadstart="onVideoLoadStart"
     >
       <source src="/walking-video.mp4" type="video/mp4">
     </video>
@@ -190,13 +188,8 @@ import GaugeTimer from './GaugeTimerComponent.vue';
 const gameStore = useGameStore();
 const showNotes = ref(false);
 const backgroundVideo = ref(null);
-const videoTimeout = ref(null);
-const timeUpdateHandler = ref(null);
 const videoReady = ref(false);
-const videoLoadFailed = ref(false);
-const videoLoadAttempts = ref(0);
 const showQuestionContent = ref(false);
-const videoIntroComplete = ref(false);
 
 const props = defineProps({
   question: {
@@ -366,199 +359,119 @@ const valveShakeDuration = computed(() => {
   }
 });
 
-// Video event handlers
-function onVideoLoadStart() {
-  console.log('Video load started');
-  videoLoadAttempts.value++;
-}
-
-function onVideoLoaded() {
-  console.log('Video metadata loaded');
-  // Don't automatically reset currentTime here - let startVideoIntro handle positioning
-}
-
-function onVideoCanPlay() {
-  console.log('Video can play through');
+// Simple video event handlers
+function onVideoReady() {
+  console.log('Video ready to play');
   videoReady.value = true;
-  videoLoadFailed.value = false;
+  if (backgroundVideo.value && backgroundVideo.value.currentTime === 0) {
+    startVideoFromBeginning();
+  }
 }
 
 function onVideoError(event) {
   console.error('Video loading error:', event);
-  videoLoadFailed.value = true;
-  videoReady.value = false;
-  
-  // If video fails, immediately show question content and start timer
-  if (!showQuestionContent.value) {
-    console.log('Video failed to load, falling back to immediate question display');
-    showQuestionContent.value = true;
-    videoIntroComplete.value = true;
-    setTimeout(() => {
-      gameStore.startTimer();
-    }, 500);
-  }
+  // Skip video and show content immediately
+  showQuestionContent.value = true;
+  setTimeout(() => {
+    gameStore.startTimer();
+  }, 100);
 }
 
-// Video segment mapping for each question
-function getVideoSegment(questionIndex) {
-  const segments = [
-    { start: 0, end: 5 },     // Question 1: 0:00 to 0:05
-    { start: 5, end: 11 },    // Question 2: 0:05 to 0:11  
-    { start: 11, end: 15 },   // Question 3: 0:11 to 0:15
-    { start: 15, end: 21 },   // Question 4: 0:15 to 0:21
-    { start: 21, end: 26 },   // Question 5: 0:21 to 0:26
-    { start: 26, end: 31 },   // Question 6: 0:26 to 0:31
-    { start: 31, end: null }  // Question 7: 0:31 to end of video
+// Video segment durations for each question (in seconds)
+function getVideoDuration(questionIndex) {
+  const durations = [
+    5, // Question 1: 5 seconds (0:00 to 0:05)
+    6, // Question 2: 6 seconds (0:05 to 0:11)  
+    4, // Question 3: 4 seconds (0:11 to 0:15)
+    6, // Question 4: 6 seconds (0:15 to 0:21)
+    5, // Question 5: 5 seconds (0:21 to 0:26)
+    5, // Question 6: 5 seconds (0:26 to 0:31)
+    10 // Question 7: 10 seconds (0:31 to end, or reasonable duration)
   ];
   
-  return segments[questionIndex] || segments[0];
+  return durations[questionIndex] || 5;
 }
 
-// Video control functions
-function startVideoIntro() {
-  // If video has failed to load or too many attempts, skip video and show content immediately
-  if (videoLoadFailed.value || videoLoadAttempts.value > 50) {
-    console.log('Video unavailable, showing question content immediately');
-    showQuestionContent.value = true;
-    videoIntroComplete.value = true;
+function startVideoFromBeginning() {
+  if (!backgroundVideo.value || !videoReady.value) return;
+  
+  const duration = getVideoDuration(0) * 1000; // Convert to milliseconds
+  console.log(`Starting video from beginning - will play for ${duration/1000} seconds`);
+  showQuestionContent.value = false;
+  
+  backgroundVideo.value.play().then(() => {
     setTimeout(() => {
+      if (backgroundVideo.value) {
+        backgroundVideo.value.pause();
+      }
+      showQuestionContent.value = true;
       gameStore.startTimer();
-    }, 500);
+    }, duration);
+  }).catch(() => {
+    showQuestionContent.value = true;
+    gameStore.startTimer();
+  });
+}
+
+function continueVideo() {
+  if (!backgroundVideo.value || !videoReady.value) {
+    showQuestionContent.value = true;
+    gameStore.startTimer();
     return;
   }
   
-  if (backgroundVideo.value && videoReady.value) {
-    if (videoTimeout.value) {
-      clearTimeout(videoTimeout.value);
-    }
-    if (timeUpdateHandler.value) {
-      backgroundVideo.value.removeEventListener('timeupdate', timeUpdateHandler.value);
-    }
-    
-    const segment = getVideoSegment(props.currentQuestionIndex);
-    console.log(`Starting video segment for question ${props.currentQuestionIndex + 1}: ${segment.start}s to ${segment.end ? segment.end + 's' : 'end'}`);
-    
-    showQuestionContent.value = false;
-    videoIntroComplete.value = false;
-    
-    // Better Chrome compatibility for seeking
-    const seekToTime = () => {
-      return new Promise((resolve, reject) => {
-        const video = backgroundVideo.value;
-        if (!video) {
-          reject(new Error('Video element not available'));
-          return;
-        }
-        
-        const onSeeked = () => {
-          video.removeEventListener('seeked', onSeeked);
-          console.log(`Successfully seeked to ${segment.start}s, actual time: ${video.currentTime}s`);
-          resolve();
-        };
-        
-        const onError = () => {
-          video.removeEventListener('error', onError);
-          reject(new Error('Seek failed'));
-        };
-        
-        video.addEventListener('seeked', onSeeked);
-        video.addEventListener('error', onError);
-        video.currentTime = segment.start;
-        
-        // Fallback timeout
-        setTimeout(() => {
-          video.removeEventListener('seeked', onSeeked);
-          video.removeEventListener('error', onError);
-          if (Math.abs(video.currentTime - segment.start) > 1) {
-            console.warn(`Seek may have failed. Target: ${segment.start}s, Actual: ${video.currentTime}s`);
-          }
-          resolve();
-        }, 1000);
-      });
-    };
-    
-    backgroundVideo.value.playbackRate = 1;
-    
-    timeUpdateHandler.value = () => {
+  const duration = getVideoDuration(props.currentQuestionIndex) * 1000; // Convert to milliseconds
+  console.log(`Continuing video from current position - will play for ${duration/1000} seconds`);
+  showQuestionContent.value = false;
+  
+  backgroundVideo.value.play().then(() => {
+    setTimeout(() => {
       if (backgroundVideo.value) {
-        const currentTime = backgroundVideo.value.currentTime;
-        const shouldStop = segment.end ? currentTime >= segment.end : backgroundVideo.value.ended;
-        
-        if (shouldStop) {
-          console.log(`Video segment complete at: ${currentTime}s`);
-          backgroundVideo.value.pause();
-          backgroundVideo.value.removeEventListener('timeupdate', timeUpdateHandler.value);
-          timeUpdateHandler.value = null;
-          
-          videoIntroComplete.value = true;
-          showQuestionContent.value = true;
-          
-          setTimeout(() => {
-            gameStore.startTimer();
-          }, 500);
-        }
+        backgroundVideo.value.pause();
       }
-    };
-    
-    backgroundVideo.value.addEventListener('timeupdate', timeUpdateHandler.value);
-    
-    // Use the improved seeking function before playing
-    seekToTime().then(() => {
-      return backgroundVideo.value.play();
-    }).then(() => {
-      console.log(`Video segment started playing from ${segment.start}s (actual: ${backgroundVideo.value.currentTime}s)`);
-    }).catch(error => {
-      console.error('Video play error:', error);
-      // Fallback: show content immediately if video fails
       showQuestionContent.value = true;
-      videoIntroComplete.value = true;
-      setTimeout(() => {
-        gameStore.startTimer();
-      }, 500);
-    });
-  } else if (!videoReady.value && videoLoadAttempts.value <= 50) {
-    console.log('Video not ready yet, waiting...');
-    setTimeout(() => startVideoIntro(), 100);
-  }
+      gameStore.startTimer();
+    }, duration);
+  }).catch(() => {
+    showQuestionContent.value = true;
+    gameStore.startTimer();
+  });
 }
 
 function stopVideo() {
   if (backgroundVideo.value) {
-    console.log('Stopping video...');
+    console.log('Pausing video...');
     backgroundVideo.value.pause();
-    if (timeUpdateHandler.value) {
-      backgroundVideo.value.removeEventListener('timeupdate', timeUpdateHandler.value);
-      timeUpdateHandler.value = null;
-    }
-  }
-  if (videoTimeout.value) {
-    clearTimeout(videoTimeout.value);
-    videoTimeout.value = null;
   }
 }
 
-// Watch for when question changes to start video intro
-watch(() => props.question, (newQuestion, oldQuestion) => {
-  if (newQuestion && newQuestion !== oldQuestion) {
-    console.log('New question detected, starting transition sequence...');
+// Watch for when question changes
+watch(() => props.currentQuestionIndex, (newIndex, oldIndex) => {
+  if (newIndex !== oldIndex) {
+    console.log('New question detected, index:', newIndex);
     
-    if (oldQuestion) {
-      // For question transitions: first hide content, then start video
-      console.log('Hiding current question content...');
+    if (newIndex === 0 && oldIndex === undefined) {
+      // First question of the game - start from beginning
       showQuestionContent.value = false;
-      videoIntroComplete.value = false;
-      
-      // Wait for smooth fade-out transition to complete
+      if (videoReady.value) {
+        startVideoFromBeginning();
+      } else {
+        // If video not ready, wait for it or fallback
+        setTimeout(() => {
+          if (videoReady.value) {
+            startVideoFromBeginning();
+          } else {
+            showQuestionContent.value = true;
+            gameStore.startTimer();
+          }
+        }, 500);
+      }
+    } else if (oldIndex !== undefined) {
+      // Transitioning between questions - continue video
+      showQuestionContent.value = false;
       setTimeout(() => {
-        console.log('Content hidden, starting video intro...');
-        startVideoIntro();
-      }, 650); // Wait for fade-out transition (0.6s + small buffer)
-    } else {
-      // First question: start immediately
-      console.log('First question, starting video intro...');
-      showQuestionContent.value = false;
-      videoIntroComplete.value = false;
-      setTimeout(() => startVideoIntro(), 100);
+        continueVideo();
+      }, 300);
     }
   }
 }, { immediate: true });
