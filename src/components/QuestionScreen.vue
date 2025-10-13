@@ -29,40 +29,33 @@
                       role="progressbar" 
                       :style="{ width: `${(timeRemaining / 30) * 100}%` }"
                     ></div>
-                    <div class="timer-circle" 
-                         :class="timerColorClass"
-                         :style="{ left: `${(timeRemaining / 30) * 100}%` }">
-                      <svg class="clock-svg" viewBox="0 0 24 24" width="18" height="18">
-                        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none" />
-                        <line x1="12" y1="12" x2="12" y2="6" stroke="white" stroke-width="2" stroke-linecap="round" />
-                        <line x1="12" y1="12" x2="16" y2="12" stroke="white" stroke-width="2" stroke-linecap="round" />
-                      </svg>
-                      <div class="timer-text">{{ timeRemaining }}</div>
-                    </div>
-                    <div class="segment-overlay">
-                      <div class="segment" v-for="n in 6" :key="n"></div>
-                    </div>
+                  </div>
+                  <div class="timer-text-display">
+                    {{ timeRemaining }} SECOND{{ timeRemaining !== 1 ? 'S' : '' }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="corner-home-button">
-            <img src="/home.png" alt="Home" class="corner-home" @click="$emit('playAgain')">
+            <img src="/back-to-home.png" alt="Home" class="corner-home" @click="$emit('playAgain')">
           </div>
 
           <div :class="['question-content', 'question-' + question.id]">
-            <!-- Question Text Container -->
-            <div class="question-text-container">
-              <h2 class="question-proper" v-html="question.text"></h2>
+            <!-- Question Number Badge -->
+            <div class="question-number-badge">
+              <span>Question {{ currentQuestionIndex + 1 }}</span>
             </div>
             
+            <!-- Question Text -->
+            <h2 class="question-proper" v-html="question.text"></h2>
+            
             <!-- Answer Options Grid -->
-            <div class="answer-options-grid">
-              <!-- First row - left aligned -->
-              <div class="answer-option-row-1">
+            <div class="answer-options-grid" :class="{ 'four-options': question.options.length === 4 }">
+              <!-- Four options in one row -->
+              <div v-if="question.options.length === 4" class="answer-option-row-four">
                 <div
-                  v-for="(option, index) in question.options.slice(0, 3)"
+                  v-for="(option, index) in question.options"
                   :key="index"
                   class="answer-option-skewed"
                   :class="{
@@ -73,74 +66,96 @@
                   }"
                   @click="!showExplanation && handleAnswer(option)"
                 >
-                  <div class="option-text" v-html="option"></div>
-                  <div v-if="showExplanation && option === question.correctAnswer" class="check-mark">✓</div>
-                  <div v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" class="x-mark">✗</div>
+                  <div class="option-text-with-icon">
+                    <div class="option-text" v-html="option"></div>
+                    <img v-if="showExplanation && option === question.correctAnswer" src="/correct-check.png" alt="Correct" class="answer-icon">
+                    <img v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" src="/incorrect-x.png" alt="Incorrect" class="answer-icon">
+                  </div>
                 </div>
               </div>
               
-              <!-- Second row - right aligned -->
-              <div class="answer-option-row-2" v-if="question.options.length > 3">
-                <div
-                  v-for="(option, index) in question.options.slice(3)"
-                  :key="index + 3"
-                  class="answer-option-skewed"
-                  :class="{
-                    'selected': selectedAnswer === option,
-                    'correct': showExplanation && option === question.correctAnswer,
-                    'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
-                    'faded': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
-                  }"
-                  @click="!showExplanation && handleAnswer(option)"
-                >
-                  <div class="option-text" v-html="option"></div>
-                  <div v-if="showExplanation && option === question.correctAnswer" class="check-mark">✓</div>
-                  <div v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" class="x-mark">✗</div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="question-wrapper" :class="{ 'show-explanation': showExplanation, 'centered-wrapper': !selectedAnswer && timeRemaining > 0 }">
-              <div class="question-with-answers row mb-4">
-                <div class="col-12">
-                  <div class="question-container" :class="{ 'centered-container': !selectedAnswer && timeRemaining > 0 }">
-                  </div>
-                </div>
-              </div>
-              <transition name="explanation-fade">
-                <div v-if="showExplanation" class="explanation-container row">
-                  <div class="col-12">
-                    <div class="explanation-card" :class="{
-                      'correct-answer': selectedAnswer === question.correctAnswer,
-                      'incorrect-answer': selectedAnswer !== question.correctAnswer
-                    }">
-                      <span class="explanation-text">
-                        <img :src="['/question-' + question.id + '-box.png']">
-                      </span>
+              <!-- Six options in two rows -->
+              <template v-else>
+                <!-- First row - left aligned -->
+                <div class="answer-option-row-1">
+                  <div
+                    v-for="(option, index) in question.options.slice(0, 3)"
+                    :key="index"
+                    class="answer-option-skewed"
+                    :class="{
+                      'selected': selectedAnswer === option,
+                      'correct': showExplanation && option === question.correctAnswer,
+                      'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
+                      'faded': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
+                    }"
+                    @click="!showExplanation && handleAnswer(option)"
+                  >
+                    <div class="option-text-with-icon">
+                      <div class="option-text" v-html="option"></div>
+                      <img v-if="showExplanation && option === question.correctAnswer" src="/correct-check.png" alt="Correct" class="answer-icon">
+                      <img v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" src="/incorrect-x.png" alt="Incorrect" class="answer-icon">
                     </div>
                   </div>
                 </div>
-              </transition>
-              <transition name="explanation-fade">
-                <div v-if="showExplanation" class="addl-info-container" :class="{ active: showAdditionalInfo }">
-                  <button 
-                    class="addl-info-btn"
-                    @click="toggleAdditionalInfo"
+                
+                <!-- Second row - right aligned -->
+                <div class="answer-option-row-2" v-if="question.options.length > 3">
+                  <div
+                    v-for="(option, index) in question.options.slice(3)"
+                    :key="index + 3"
+                    class="answer-option-skewed"
+                    :class="{
+                      'selected': selectedAnswer === option,
+                      'correct': showExplanation && option === question.correctAnswer,
+                      'incorrect': showExplanation && selectedAnswer === option && option !== question.correctAnswer,
+                      'faded': (selectedAnswer || timeRemaining === 0) && selectedAnswer !== option && option !== question.correctAnswer
+                    }"
+                    @click="!showExplanation && handleAnswer(option)"
                   >
-                    Abbreviations & References
-                  </button>
-                  <div v-if="showAdditionalInfo" class="explanation-desc">
-                    <img :src="['/question-' + question.id + '-notes.png']">
+                    <div class="option-text-with-icon">
+                      <div class="option-text" v-html="option"></div>
+                      <img v-if="showExplanation && option === question.correctAnswer" src="/correct-check.png" alt="Correct" class="answer-icon">
+                      <img v-if="showExplanation && selectedAnswer === option && option !== question.correctAnswer" src="/incorrect-x.png" alt="Incorrect" class="answer-icon">
+                    </div>
                   </div>
                 </div>
-              </transition>
+              </template>
             </div>
+            
+            <!-- Explanation Banner - positioned below questions -->
+            <transition name="explanation-slide-up">
+              <div v-if="showExplanation && question.hasOwnProperty('explanation')" class="explanation-banner-container">
+                <div class="explanation-banner-skewed">
+                  <div class="explanation-content">
+                    <div v-if="question.explanation && question.explanation.trim()" class="explanation-text" v-html="question.explanation"></div>
+                    <img v-else :src="['/question-' + question.id + '-box.png']">
+                  </div>
+                </div>
+              </div>
+            </transition>
           </div>
         </div>
+        
+        <!-- Additional Info Container - Fixed to bottom -->
+        <transition name="explanation-fade">
+          <div v-if="showExplanation" class="addl-info-container" :class="{ active: showAdditionalInfo }">
+            <button 
+              class="addl-info-btn"
+              @click="toggleAdditionalInfo"
+            >
+              <span>Abbreviations & References</span>
+            </button>
+            <div v-if="showAdditionalInfo" class="explanation-desc">
+              <img :src="['/question-' + question.id + '-notes.png']">
+            </div>
+          </div>
+        </transition>
+        
         <transition name="fade">
-          <div v-if="showExplanation && question.finePrint && question.finePrint.trim().length > 0" :class="['question-' + question.id + ' fine-print']">
+          <div v-if="showExplanation && question.hasOwnProperty('finePrint')" :class="['question-' + question.id + ' fine-print']">
             <div class="fine-print-content">
-              <img :src="['/question-' + question.id + '-fineprint.png']">
+              <div v-if="question.finePrint && question.finePrint.trim()" class="fine-print-text" v-html="question.finePrint"></div>
+              <img v-else :src="['/question-' + question.id + '-fineprint.png']">
             </div>
           </div>
         </transition>
@@ -150,7 +165,8 @@
             @click="$emit('next')"
             :disabled="!selectedAnswer && timeRemaining > 0"
           >
-            {{ isLastQuestion ? 'Finish' : 'Next Question' }} <img src="/next-q.png">
+            <span>{{ isLastQuestion ? 'Finish' : 'Next Question' }}</span>
+            <img src="/next-q.png">
           </button>
         </div>
       </div>
@@ -516,11 +532,9 @@ watch(() => props.showExplanation, (showExplanation) => {
 }
 
 .question-overlay {
-  background: linear-gradient(to bottom, transparent 50%, rgba(15, 45, 66, 0.85) 100%),
-    linear-gradient(90deg, rgba(15, 45, 66, 0.85) 0%, rgba(15, 45, 66, 0.6) 40%, transparent 70%);
   height: 100%;
   width: 100%;
-  padding: 2rem 4rem;
+  padding: 0;
   color: white;
 }
 
@@ -569,15 +583,50 @@ h2 {
   letter-spacing: -1px;
 }
 
-/* Question Text Container */
-.question-text-container {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 20px 40px;
-  margin: 80px auto 40px auto;
-  max-width: 800px;
+/* Question Number Badge */
+.question-number-badge {
+  position: absolute;
+  top: 0px;
+  right: 838px;
+  padding: 5px;
+  color: #003B45;
   text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Bebas Neue Pro";
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 92%; /* 32.2px */
+  letter-spacing: -0.35px;
+  z-index: 10;
+  text-transform: uppercase;
+  background: #FCB515;
+  width: 218.83px;
+  height: 39.94px;
+  flex-shrink: 0; 
+  transform: skew(-15deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Counter-skew the text inside the badge */
+.question-number-badge span {
+  transform: skew(15deg);
+}
+
+/* Question Text */
+.question-proper {
+  color: #003B45;
+  text-align: center;
+  font-size: 70px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 108%; /* 75.6px */
+  letter-spacing: -1.4px;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 93px;
 }
 
 /* Answer Options Grid */
@@ -585,7 +634,15 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin: 0;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+/* Four options in one row - centered */
+.answer-options-grid .answer-option-row-four {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 /* First row - left aligned */
@@ -606,7 +663,7 @@ h2 {
 .answer-option-skewed {
   width: 492.751px;
   height: 98px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.70);
   border: 2px solid #25575F;
   transform: skew(-15deg);
   cursor: pointer;
@@ -618,20 +675,53 @@ h2 {
   margin: 10px 0;
 }
 
+/* Four options layout - smaller width */
+.answer-options-grid.four-options .answer-option-skewed {
+  width: 366.751px;
+}
+
 .answer-option-skewed:hover {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: skew(-15deg) translateY(-2px);
 }
 
-.answer-option-skewed .option-text {
+.answer-option-skewed .option-text-with-icon {
   transform: skew(15deg);
-  font-size: 18px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.answer-option-skewed .option-text {
   color: #25575F;
   text-align: center;
-  padding: 0 20px;
-  line-height: 1.3;
+  font-family: Inter;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%; /* 45px */
+  letter-spacing: -0.6px;
+}
+
+/* Correct answer icon - appears at front */
+.answer-icon[src="/correct-check.png"] {
+  width: 39px;
+  height: 37px;
+  flex-shrink: 0;
+  order: -1; /* Places icon before text */
+}
+
+/* Wrong answer icon - appears at front */
+.answer-icon[src="/incorrect-x.png"] {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  order: -1; /* Places icon before text */
 }
 
 .answer-option-skewed.selected {
@@ -641,13 +731,21 @@ h2 {
 }
 
 .answer-option-skewed.correct {
-  background: rgba(40, 167, 69, 0.1) !important;
-  border-color: #28A745 !important;
+  background: #00917D !important;
+  border-color: #00917D !important;
+}
+
+.answer-option-skewed.correct .option-text {
+  color: white !important;
 }
 
 .answer-option-skewed.incorrect {
-  background: rgba(220, 53, 69, 0.1) !important;
-  border-color: #DC3545 !important;
+  background: #FCB514 !important;
+  border-color: #FCB514 !important;
+}
+
+.answer-option-skewed.incorrect .option-text {
+  color: #25575F !important;
 }
 
 .answer-option-skewed.faded {
@@ -655,26 +753,78 @@ h2 {
   cursor: not-allowed;
 }
 
-.check-mark, .x-mark {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  transform: skew(15deg);
-}
-
-.check-mark {
-  color: #28A745;
-}
-
-.x-mark {
-  color: #DC3545;
-}
 
 .question-content {
   max-width: 100%;
-  padding-top: 50px;
+  padding: 0;
+  margin: 0;
+}
+
+/* Explanation Banner */
+.explanation-banner-container {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.explanation-banner-skewed {
+  width: 1781.886px;
+  height: 132px;
+  background-color: #00917D;
+  transform: skew(-15deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.explanation-banner-skewed .explanation-content {
+  transform: skew(15deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.explanation-banner-skewed .explanation-content .explanation-text {
+  color: #FFF;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 27px; /* 108% */
+  letter-spacing: -0.5px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-family: "Inter";
+}
+
+.explanation-banner-skewed .explanation-content img {
+  max-width: 90%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* Explanation slide-up transition */
+.explanation-slide-up-enter-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explanation-slide-up-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explanation-slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.explanation-slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 
 
@@ -893,27 +1043,31 @@ h2 {
 
 /* TIMER STYLES */
 .timer-section {
-  width: 300px;
+  width: 400px;
   margin-left: auto;
 }
 
 .timer-bar-container {
-  position: relative;
-  padding-left: 30px;
-  padding-right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .progress {
-  height: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
   position: relative;
-  overflow: visible;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: flex-end;
 }
 
 .progress-bar {
-  border-radius: 10px;
+  height: 100%;
+  border-radius: 6px;
   position: relative;
   transition: all 1s linear;
 }
@@ -930,58 +1084,14 @@ h2 {
   background-color: #F44336 !important;
 }
 
-.progress::before {
-  content: none;
-}
-
-.segment-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 1px;
-  pointer-events: none;
-}
-
-.segment {
-  width: 2px;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
-}
-
-.timer-circle {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 3px solid white;
-  z-index: 10;
-  transition: left 1s linear, background-color 0.5s ease;
-}
-
-.clock-svg {
-  margin-bottom: 2px;
-}
-
-.timer-text {
+.timer-text-display {
   color: white;
   font-weight: bold;
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.timer-value {
-  display: none;
+  font-size: 16px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
 }
 
 /* IMPROVED QUESTION WRAPPER TRANSITIONS */
@@ -1225,33 +1335,37 @@ h2 {
 
 .addl-info-container {
   position: fixed;
-  left: 4rem;
+  right: -50px;
   bottom: 0px;
   z-index: 100;
   transition: transform 0.4s ease;
-  max-width: 853px;
   text-align: left;
 }
 
 .addl-info-btn {
-  background-color: #f9cb4a;
-  color: #000;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 8px 8px 0 0;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 382px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: var(--Text-primary, #000);
-  font-family: 'PF Fuel Grime';
-  font-size: 32.583px;
+  width: 439.321px;
+  height: 60px;
+  flex-shrink: 0;
+  color: #FFF;
+  text-align: center;
+  font-family: "Bebas Neue Pro";
+  font-size: 30px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%;
+  line-height: 92%; /* 27.6px */
+  letter-spacing: -0.3px;
+  text-transform: uppercase;
+  background: rgba(0, 59, 69, 0.90);
+  transform: skew(-15deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.addl-info-btn span {
+  transform: skew(15deg) !important;
+  display: inline-block;
 }
 
 .addl-info-btn::after {
@@ -1259,12 +1373,15 @@ h2 {
   height: 34px;
   width: 34px;
   background-image: url('/drawer.png');
-  font-size: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: skew(15deg);
   transition: transform 0.3s ease;
 }
 
 .active .addl-info-btn::after {
-  transform: rotate(180deg);
+  transform: skew(15deg) rotate(180deg);
 }
 
 .addl-info-btn:hover {
@@ -1272,16 +1389,25 @@ h2 {
 }
 
 .explanation-desc {
-  background-color: #f1f1f1;
-  padding: 20px;
+  background-color: #25575F;
+  padding: 20px 150px 0px 50px;
   overflow-y: auto;
   width: 100%;
+  min-width: 1143.236px;
+  min-height: 154px;
+  flex-shrink: 0;
   color: #000;
   font-family: 'Inter';
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
   line-height: 17px;
+  transform: skew(-15deg);
+}
+
+.explanation-desc img {
+  transform: skew(15deg);
+  width: 100%;
 }
 
 .explanation-desc img {
@@ -1324,17 +1450,35 @@ h2 {
 
 .button-container {
     position: absolute;
-    right: 100px;
-    bottom: 175px;
+    right: 0px;
+    bottom: 92px;
 }
 
 .button-container button.btn.btn-primary.btn-lg {
-    font-size: 2rem;
-    text-transform: uppercase;
     height: 68px;
     width: 253px;
+    border-radius: 0;
+    transform: skew(-15deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container button.btn.btn-primary.btn-lg span {
+    color: #003B45;
+    text-align: center;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 92%; /* 27.6px */
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
     font-family: 'PF Fuel Grime';
-    color: #000;
+}
+
+.button-container button.btn.btn-primary.btn-lg span,
+.button-container button.btn.btn-primary.btn-lg img {
+    transform: skew(15deg);
 }
 
 .question-text {
@@ -1606,8 +1750,9 @@ h2 {
 
 .corner-home-button {
   position: absolute;
-  right: 104px;
-  top: 104px;
+  left: 0px;
+  top: 0px;
+  
 }
 
 .question-3 h2.question-proper,

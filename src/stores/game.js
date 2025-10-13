@@ -6,218 +6,183 @@ import { initDB, saveScore, getTopScores } from './db'; // Import DB functions
 const questions = [
   {
     id: 1,
-    text: "Among most patients with hypertension, what is the<br>recommended blood pressure target according to<br>the 2017 ACC/AHA Hypertension Guideline?",
+    text: "Which of the following is considered a risk factor for hyperkalemia?",
     type: "multiple",
-    options: ["<120/80 mm Hg", "<130/80 mm Hg<sup>1,2*†</sup>", "<140/90 mm Hg", "<160/100 mm Hg"],
-    correctAnswer: "<130/80 mm Hg<sup>1,2*†</sup>",
-    explanation: "According to the 2017 ACC/AHA Hypertension Guideline, the recommended blood pressure target for most patients with hypertension is <130/80 mm Hg<sup>1,2*†</sup>.",
-    additionalInfo: "<b>Abbreviations:</b> ACC=American College of Cardiology; AHA=American Heart Association; ASCVD=atherosclerotic cardiovascular disease; BP=blood pressure; COR=class of recommendation; CV=cardiovascular; DBP=diastolic blood pressure; HTN=hypertension; LOE=level of evidence; RCTs=randomized controlled trials; SBP=systolic blood pressure.<br><br><b>References:</b> 1. Whelton PK, Carey RM, Aronow WS, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA guideline for the prevention, detection, evaluation, and management of high blood pressure in adults: executive summary: a report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines. Hypertension. 2018;71(6):1269-1324. 2. Vemu PL, Yang E, Ebinger J. 2023 ESH hypertension guideline update: bringing us closer together across the pond. Am Coll Cardiol. Published February 5, 2024. Accessed February 13, 2025. https://www.acc.org/Latest-in-Cardiology/Articles/2024/02/05/11/43/2023-ESH-Hypertension-Guideline-Update",
-    finePrint: "*For adults with confirmed HTN and known CV disease or 10-year ASCVD event risk of 10% or higher, a BP target of <130/80 mm Hg is recommended (COR I, LOE SBP: B-R, LOE DBP: C-EO). For adults with confirmed HTN, without additional markers of increased CV disease risk, a BP target of <130/80 mm Hg may be reasonable (COR IIb, LOE SBP: B-NR, LOE DBP: C-EO).<br>1 COR I is a strong recommendation, while COR IIb is a weak recommendation. A LOE of B-R indicates a moderate-quality of evidence from RCTs or meta-analyses; B-NR indicates a moderate-quality of evidence from nonrandomized studies; and C-EO indicates consensus of expert opinion based on clinical experience.1"
+    options: ["CKD", "Heart failure", "Diabetes", "Hypertension", "RAASi therapy", "All of the above"],
+    correctAnswer: "All of the above",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 2,
-    text: "Patients with aldosterone dysregulation are at an<br>increased risk of _____ compared to<br>patients with hypertension.",
+    text: "Hyperkalemia is defined as serum potassium levels greater than ______",
     type: "multiple",
-    options: ["Coronary artery disease and heart failure", "Atrial fibrillation", "Stroke", "All of the above<sup>1*†</sup>"],
-    correctAnswer: "All of the above<sup>1*†</sup>",
-    explanation: "Patients with aldosterone dysregulation are at an increased risk of coronary artery disease and heart failure, atrial fibrillation, stroke, and other cardiovascular complications compared to patients with hypertension.<sup>1*†</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CI=confidence interval; HTN=hypertension; IQR=interquartile range; OR=odds ratio.<br><br><b>Reference:</b> 1. Monticone S, D'Ascenzo F, Moretti C, et al. Cardiovascular events and target organ damage in primary aldosteronism compared with essential hypertension: a systematic review and meta-analysis. Lancet Diabetes Endocrinol. 2018;6(1):41-50.",
-    finePrint: "*Meta-analysis of 31 studies that evaluated cardiovascular risk in patients with primary aldosteronism (n=3838) compared to patients with essential HTN (n=9284). Median duration of HTN was 8.8 years (IQR 6.2–10.7).<br>OR (95% CI) for the outcomes of coronary artery disease=1.77 (1.10–2.83), heart failure=2.05 (1.11–3.78), atrial fibrillation=3.52 (2.06–5.99), and stroke=2.58 (1.93–3.45).†"
+    options: ["4.5 mEq/L", "5.0 mEq/L", "5.5 mEq/L", "6.0 mEq/L"],
+    correctAnswer: "5.0 mEq/L",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 3,
-    text: "True or false? Every 10 mm Hg reduction in systolic <br>blood pressure significantly reduces the risk of major<br> cardiovascular disease events, coronary heart <br>disease, stroke, heart failure, and all-cause mortality.",
+    text: "Serum potassium ≥5.0 mEq/L was associated with an increased risk of all-cause mortality in patients with hyperkalemia, regardless of comorbidity profile.",
     type: "boolean",
-    options: ["True<sup>1*</sup>", "False"],
-    correctAnswer: "True<sup>1*</sup>",
-    explanation: "Every 10 mm Hg reduction in systolic blood pressure significantly reduces the risk of major cardiovascular disease events, coronary heart disease, stroke, heart failure, and all-cause mortality.<sup>1*</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CHD=coronary heart disease; CI=confidence interval; RR=relative risk.<br><br><b>Reference:</b>1. Ettehad D, Emdin CA, Kiran A, et al. Blood pressure lowering for prevention of cardiovascular disease and death: a systematic review and meta-analysis. Lancet. 2016;387(10022):957-967.",
-    finePrint: "*Meta-analysis of 123 studies with 613,815 participants. Every 10 mm Hg reduction in systolic blood pressure significantly reduced the risk of major cardiovascular events (RR 0.80; 95% CI 0.77–0.83), CHD (RR 0.83; 95% CI 0.78–0.88), stroke (RR 0.73; 95% CI 0.68–0.77), heart failure (RR 0.72; 95% CI 0.67–0.78), and all-cause mortality (RR 0.87; 95% CI 0.84–0.91)."
+    options: ["True", "False"],
+    correctAnswer: "True",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 4,
-    text: "Aldosterone dysregulation is defined as abnormal <br>aldosterone production despite _____.",
+    text: "In a CKD subgroup analysis of a real-world evidence study of US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk of progression to ESKD* with RAASi† down-titration vs patients who maintained or uptitrated their RAASi dose?",
     type: "multiple",
-    options: ["Low renin and low sodium balance", "High renin and high sodium balance", "Low renin and high sodium balance<sup>1,2</sup>", "None of the above"],
-    correctAnswer: "Low renin and high sodium balance<sup>1,2</sup>",
-    explanation: "Aldosterone dysregulation is defined as abnormal aldosterone production despite low renin and high sodium balance.<sup>1,2</sup>",
-    additionalInfo: "<b>References:</b> 1. Brown JM, Siddiqui M, Calhoun DA, et al. The unrecognized prevalence of primary aldosteronism: a cross-sectional study. Ann Intern Med. 2020;173(1):10-20.2. Papadopoulou-Marketou N, Vaidya A, Dluhy R, Chrousos GP. Hyperaldosteronism. In: Feingold KR, Anawalt B, Blackman MR, et al., eds. Endotext [Internet]. South Dartmouth (MA): MDText.com, Inc.; 2000-. Updated August 6, 2020. Accessed February 13, 2025. https://www.ncbi.nlm.nih.gov/books/NBK279065/",
+    options: ["27%", "45%", "60%", "83%"],
+    correctAnswer: "83%",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 5,
-    text: "Every 10 mm Hg reduction in systolic blood<br> pressure significantly reduces the risk of major<br> CVD events by _____.",
+    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk of progression to ESKD* with RAASi† discontinuation vs patients who maintained or uptitrated their RAASi dose?",
     type: "multiple",
-    options: ["5%", "10%", "20%<sup>1*</sup>", "100%"],
-    correctAnswer: "20%<sup>1*</sup>",
-    explanation: "Every 10 mm Hg reduction in systolic blood pressure significantly reduces the risk of major CVD events by 20%.<sup>1*</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CI=confidence interval; CVD=cardiovascular disease; RR=relative risk.<br><br><b>Reference:</b> 1. Ettehad D, Emdin CA, Kiran A, et al. Blood pressure lowering for prevention of cardiovascular disease and death: a systematic review and meta-analysis. Lancet. 2016;387(10022):957-967.",
-    finePrint: "Meta-analysis of 123 studies with 613,815 participants. Major CVD events defined as fatal and non-fatal myocardial infarction, sudden cardiac death, revascularization, fatal and non-fatal stroke, and fatal and non-fatal heart failure. Every 10 mm Hg reduction in systolic blood pressure significantly reduced the risk of major cardiovascular events (RR 0.80, 95% CI 0.77–0.83)."
+    options: ["55%", "67%", "74%", "82%"],
+    correctAnswer: "82%",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 6,
-    text: "True or false? About half of US adults with high blood<br> pressure may not be at goal (less than 130/80 mm Hg) <br>despite taking 2 or more antihypertensive medications<br> of different classes.",
-    type: "boolean",
-    options: ["True<sup>1</sup>", "False"],
-    correctAnswer: "True<sup>1</sup>",
-    explanation: "About half of US adults with high blood pressure may not be at goal (less than 130/80 mm Hg) despite taking 2 or more antihypertensive medications of different classes.<sup>1</sup>",
-    additionalInfo: "<b>Abbreviation:</b> US=United States.<br><br><b>Reference:</b> 1. Carey RM, Sakhuja S, Calhoun DA, Whelton PK, Muntner P. Prevalence of apparent treatment-resistant hypertension in the United States: comparison of the 2008 and 2018 American Heart Association Scientific Statements on resistant hypertension. Hypertension. 2019;73(2):424-431 [including online supplement].",
+    text: "In US patients with Stage 3 or 4 CKD, What was the increased risk of all-cause inpatient hospitalizations for patients with recurrent HK vs those without HK?",
+    type: "multiple",
+    options: ["1.3x", "1.5x", "1.7x", ">2.0x"],
+    correctAnswer: ">2.0x",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 7,
-    text: "How does uncontrolled hypertension affect the <br>risk of mortality due to cardiovascular disease <br>compared to normal blood pressure?",
+    text: "In US patients with Stage 3 or 4 CKD, What was the increased risk of all-cause mortality for patients with recurrent HK vs those without HK?",
     type: "multiple",
-    options: ["No significant impact on risk", "More than doubles the risk<sup>1*</sup>", "Quadruples the risk"],
-    correctAnswer: "More than doubles the risk<sup>1*</sup>",
-    explanation: "Uncontrolled hypertension more than doubles the risk of mortality due to cardiovascular disease compared to normal blood pressure.<sup>1*</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CI=confidence interval; CVD=cardiovascular disease; HR=hazard ratio; NHANES III=Third National Examination and Nutritional Health Survey; US=United States. <br><br><b>Reference:</b> 1. Zhou D, Xi B, Zhao M, Wang L, Veeranki SP. Uncontrolled hypertension increases risk of all-cause and cardiovascular disease mortality in US adults: the NHANES III Linked Mortality Study. Sci Rep. 2018;8(1):9418.",
-    finePrint: "Prospective cohort study of US adults aged ≥18 years (N=13,947) enrolled in the NHANES III (1988–1994; median follow-up of 19.1 years). HR (95% CI) for the outcome of CVD-specific mortality was 2.23 (1.66–2.99)."
+    options: ["18%", "24%", "29%", "35%"],
+    correctAnswer: "35%",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 8,
-    text: "How does uncontrolled hypertension affect the <br>risk of mortality due to cerebrovascular disease <br>compared to normal blood pressure?",
+    text: "What was the percentage of patients with HK in the US treated with a K+ binder?",
     type: "multiple",
-    options: ["No significant impact on risk", "Doubles the risk", "Triples the risk<sup>1*</sup>"],
-    correctAnswer: "Triples the risk<sup>1*</sup>",
-    explanation: "Uncontrolled hypertension more than triples the mortality risk due to cerebrovascular disease compared to normal blood pressure.<sup>1*</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CI=confidence interval; HR=hazard ratio; NHANES III=Third National Examination and Nutritional Health Survey; US=United States.<br><br><b>Reference:</b> 1. Zhou D, Xi B, Zhao M, Wang L, Veeranki SP. Uncontrolled hypertension increases risk of all-cause and cardiovascular disease mortality in US adults: the NHANES III Linked Mortality Study. Sci Rep. 2018;8(1):9418.",
-    finePrint: "Prospective cohort study of US adults aged ≥18 years (N=13,947) enrolled in the NHANES III (1988–1994; median follow-up of 19.1 years). HR (95% CI) for the outcome of cerebrovascular disease-specific deaths was 3.01 (1.91–4.73).<br>Defined as treated with antihypertensives, but not at goal of ≤140/90 mm Hg."
+    options: ["8%", "12%", "19%", "27%"],
+    correctAnswer: "8%",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 9,
-    text: "Aldosterone production occurs in <br>the _____.",
+    text: "In a real-world evidence study, What was the percentage of patients with HK and Stage 3 or 4 CKD who experienced recurrent HK after an MNT visit within 6 months?",
     type: "multiple",
-    options: ["Adrenal glands<sup>1</sup>", "Liver", "Small intestines", "Kidneys"],
-    correctAnswer: "Adrenal glands<sup>1</sup>",
-    explanation: "Aldosterone production occurs in the adrenal glands.<sup>1</sup>",
-    additionalInfo: "<b>Reference:</b> 1. Crompton M, Skinner LJ, Satchell SC, et al. Aldosterone: essential for life but damaging to the vascular endothelium. Biomolecules. 2023;13(6):1004.",
+    options: ["35%", "41%", "49%", "56%"],
+    correctAnswer: "56%",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 10,
-    text: "About _____ of patients with hypertension<br> may have aldosterone dysregulation.",
+    text: "In a real-world evidence study, How long did it take for patients with HK and Stage 3 or 4 CKD to experience their first HK recurrence after a medical nutrition visit within 6 months?",
     type: "multiple",
-    options: ["One-twentieth", "One-tenth", "One-fifth", "One-third<sup>1</sup>"],
-    correctAnswer: "One-third<sup>1</sup>",
-    explanation: "About one-third of patients with hypertension may have aldosterone dysregulation.<sup>1</sup>",
-    additionalInfo: "<b>Reference:</b> 1. Brown JM, Siddiqui M, Calhoun DA, et al. The unrecognized prevalence of primary aldosteronism: a cross-sectional study. Ann Intern Med. 2020;173(1):10-20.",
-    finePrint: "*Based on diagnosis of primary aldosteronism."
+    options: ["~32 days", "~45 days", "~53 days", "~60 days"],
+    correctAnswer: "~32 days",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 11,
-    text: "Once produced, aldosterone binds to <br>mineralocorticoid receptors in the kidneys. <Br>What is the result?",
-    type: "multiple",
-    options: [
-      "Decreases sodium reabsorption and lowers blood pressure",
-      "Increases potassium retention and lowers blood pressure",
-      "Increases sodium reabsorption, which raises intravascular volume and blood pressure<sup>1,2</sup>"
-    ],
-    correctAnswer: "Increases sodium reabsorption, which raises intravascular volume and blood pressure<sup>1,2</sup>",
-    explanation: "Once produced, aldosterone binds to mineralocorticoid receptors in the kidneys, increasing sodium reabsorption and raising intravascular volume and blood pressure.<sup>1,2</sup>",
-    additionalInfo: "<b>References</b>: 1. Scott JH, Menouar MA, Dunn RJ. Physiology, aldosterone. StatPearls [internet]. Updated May 1, 2023. Accessed February 13, 2025. https://www.ncbi.nlm.nih.gov/books/NBK470339/2. Papadopoulou-Marketou N, Vaidya A, Dluhy R, Chrousos GP. Hyperaldosteronism. In: Feingold KR, Anawalt B, Blackman MR, et al., eds. Endotext [Internet]. South Dartmouth (MA): MDText.com, Inc.; 2000-. Updated August 6, 2020. Accessed January 27, 2025. https://www.ncbi.nlm.nih.gov/books/NBK279065/",
+    text: "In patients with HK and Stage 3 or 4 CKD, The percentage of patients with HK recurrence increased in those with prior recurrence while the average time between each recurrence decreased.",
+    type: "boolean",
+    options: ["True", "False"],
+    correctAnswer: "True",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 12,
-    text: "True or false? Excess aldosterone production leads<br> to ongoing plasma volume expansion and decreased<br> blood pressure, despite physiologic suppression of<br> the RAAS pathway.",
+    text: "The KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD supports the use of a K+ binder rather than decreasing or discontinuing ACEi/ARB therapy.",
     type: "boolean",
-    options: ["True", "False<sup>1,2</sup>"],
-    correctAnswer: "False<sup>1,2</sup>",
-    explanation: "Excess aldosterone production leads to expanding plasma volume expansion and increased blood pressure, despite physiologic suppression of the RAAS pathway.<sup>1,2</sup>",
-    additionalInfo: "<b>Abbreviation</b>: RAAS=renin-angiotensin-aldosterone system.<br><br><b>References: </b>1. Papadopoulou-Marketou N, Vaidya A, Dluhy R, Chrousos GP. Hyperaldosteronism. In: Feingold KR, Anawalt B, Blackman MR, et al., eds. Endotext [Internet]. South Dartmouth (MA): MDText.com, Inc.; 2000-. Updated August 6, 2020. Accessed January 27, 2025. https://www.ncbi.nlm.nih.gov/books/NBK279065/ 2. Triebel H, Castrop H. The renin angiotensin aldosterone system. Pflugers Arch—Eur J Physiol. 2024;476(5):705-713.",
+    options: ["True", "False"],
+    correctAnswer: "True",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 13,
-    text: "True or false? Aldosterone dysregulation may lead<br> to elevated blood pressure and increase the risk of <br>adverse cardiovascular and kidney outcomes, <br>which can occur independently of blood pressure.",
-    type: "boolean",
-    options: ["True<sup>1,2</sup>", "False"],
-    correctAnswer: "True<sup>1,2</sup>",
-    explanation: "Aldosterone dysregulation may lead to elevated blood pressure and increase the risk of adverse cardiovascular and kidney outcomes, which can occur independently of blood pressure.<sup>1,2</sup>",
-    additionalInfo: "<b>References:</b> 1. Verhovez A, Williams TA, Monticone S, et al. Genomic and non-genomic effects of aldosterone. Curr Sign Transd Ther. 2012;7:132-141. 2.  Lin X, Ullah MHE, Wu X, et al. Cerebro-cardiovascular risk, target organ damage, and treatment outcomes in primary aldosteronism. Front Cardiovasc Med. 2022:8:798364.",
+    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk (%) of HF-related hospitalizations or ED visits with RAASi* down-titration vs patients who maintained or uptitrated their RAASi* dose?",
+    type: "multiple",
+    options: ["20%", "30%", "40%", "50%"],
+    correctAnswer: "40%",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 14,
-    text: "Patients with aldosterone dysregulation have nearly _____ <br>times higher risk of stroke, _____ times higher risk of atrial<br> fibrillation, and _____ times higher risk of heart failure<br> compared to patients with hypertension alone.",
+    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk (%) of HF-related hospitalizations or ED visits with RAASi discontinuation vs patients who maintained or uptitrated their RAASi dose?",
     type: "multiple",
-    options: [
-      "1.5, 1.5, 1.5",
-      "1.5, 1.5, 2",
-      "3, 4, 2<sup>1*†</sup>"
-    ],
-    correctAnswer: "3, 4, 2<sup>1*†</sup>",
-    explanation: "Patients with aldosterone dysregulation have nearly 3 times higher risk of stroke, 4 times higher risk of atrial fibrillation, and 2 times higher risk of heart failure compared to patients with hypertension alone.<sup>1*†</sup>",
-    additionalInfo: "<b>Abbreviations:</b> CI=confidence interval; HTN=hypertension; IQR=interquartile range; OR=odds ratio.<br><br><b>Reference:</b> 1. Monticone S, D'Ascenzo F, Moretti C, et al. Cardiovascular events and target organ damage in primary aldosteronism compared with essential hypertension: a systematic review and meta-analysis. Lancet Diabetes Endocrinol. 2018;6(1):41-50.",
-    finePrint: "Meta-analysis of 31 studies that evaluated cardiovascular risk in patients with primary aldosteronism (n=3838) compared to patients with essential HTN (n=9284). ​<br>OR (95% CI) for the outcomes of stroke=2.58 (1.93–3.45), atrial fibrillation=3.52 (2.06–5.99), heart failure=2.05 (1.11–3.78)."
+    options: ["22%", "29%", "36%", "43%"],
+    correctAnswer: "43%",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   },
   {
     id: 15,
-    text: "Aldosterone dysregulation is a _____ <br>and _____ cause of hypertension.",
+    text: "In an observational study of Stockholm-based patients, What was the percentage of patients who initiated MRA and developed HK, but were not reintroduced to MRA therapy during the subsequent year after discontinuing?",
     type: "multiple",
-    options: [
-      "Prevalent, underrecognized<sup>1</sup>",
-      "Rare, overdiagnosed",
-      "Rare, harmless"
-    ],
-    correctAnswer: "Prevalent, underrecognized<sup>1</sup>",
-    explanation: "Aldosterone dysregulation is a prevalent and underrecognized cause of hypertension.<sup>1</sup>",
-    additionalInfo: "<b>Reference:</b>1. Brown MJ, Siddiqui M, Calhoun DA, et al. The unrecognized prevalence of primary aldosteronism: a cross-sectional study. Ann Intern Med. 2020;173(1):10-20.",
+    options: ["44%", "53%", "68%", "74%"],
+    correctAnswer: "74%",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 16,
-    text: "Aldosterone is an important hormone involved <Br>in blood pressure regulation, acting <br>through _____, utilizing both classical <br>genomic and non-genomic mechanisms.",
-    type: "multiple",
-    options: [
-      "A single pathway",
-      "Multiple pathways<sup>1</sup>"
-    ],
-    correctAnswer: "Multiple pathways<sup>1</sup>",
-    explanation: "Aldosterone is an important hormone involved in blood pressure regulation, acting through multiple pathways, utilizing both classical genomic and non-genomic mechanisms.<sup>1</sup>",
-    additionalInfo: "<b>Reference:</b> 1. Crompton M, Skinner LJ, Satchell SC, Butler MJ. Aldosterone: essential for life but damaging to the vascular endothelium. Biomolecules. 2023;13(6):1004.",
+    text: "The 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure supports the use of potassium binders to treat hyperkalemia in patients with HF who are taking a RAASi.",
+    type: "boolean",
+    options: ["True", "False"],
+    correctAnswer: "True",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 17,
-    text: "In normal physiology, aldosterone is increased <br>by _____ sodium concentrations, _____ blood pressure,<br> and _____ renal perfusion.",
+    text: "In a real-world evidence study, What was the approximate percentage of patients with heart failure and hyperkalemia to experience their first HK recurrence?",
     type: "multiple",
-    options: [
-      "Low, low, low<sup>1,2</sup>",
-      "Low, high, low",
-      "Low, low, high",
-      "High, high, high"
-    ],
-    correctAnswer: "Low, low, low<sup>1,2</sup>",
-    explanation: "In normal physiology, aldosterone is increased by low sodium concentrations, low blood pressure, and low renal perfusion.<sup>1,2</sup>",
-    additionalInfo: "<b>References:</b>1. Crompton M, Skinner LJ, Satchell SC, Butler MJ. Aldosterone: essential for life but damaging to the vascular endothelium. Biomolecules. 2023;13(6):1004. 2. Scott JH, Menouar MA, Dunn RJ. Physiology, aldosterone. StatPearls [internet]. Updated May 1, 2023. Accessed February 13, 2025. https://www.ncbi.nlm.nih.gov/books/NBK470339/",
+    options: ["18%", "25%", "31%", "37%"],
+    correctAnswer: "37%",
+    explanation: "",
+    additionalInfo: "",
     finePrint: ""
   },
   {
     id: 18,
-    text: "Aldosterone dysregulation is common in which<br> groups of patients with hypertension?",
-    type: "multiple",
-    options: [
-      "Resistant hypertension",
-      "Obesity and sleep apnea",
-      "Type 2 diabetes",
-      "All of the above<sup>1-5</sup>"
-    ],
-    correctAnswer: "All of the above<sup>1-5</sup>",
-    explanation: "Aldosterone dysregulation is common in patients with resistant hypertension, obesity, type 2 diabetes, and sleep apnea.<sup>1-5</sup>",
-    additionalInfo: "<b>References:</b> 1.  Brown JM, Siddiqui M, Calhoun DA, et al. The unrecognized prevalence of primary aldosteronism: a cross-sectional study. Ann Intern Med. 2020;173(1):10-20. 2. Ruiz-Sánchez JG, Paja-Fano M, González Boillos M, et al. Effect of obesity on clinical characteristics of primary aldosteronism patients at diagnosis and postsurgical response. J Clin Endocrinol Metab. 2023;109(1):e379-e388. 3. Tyfoxylou E, Voulgaris N, Gravvanis C, et al. High prevalence of primary aldosteronism in patients with type 2 diabetes mellitus and hypertension. Biomedicines. 2022;10(9):2308. 4. Pratt-Ubunama MN, Nishizaka MK, Boedefeld RL, et al. Plasma aldosterone is related to severity of obstructive sleep apnea in subjects with resistant hypertension. Chest. 2007;131(2):453-459. 5. Funes Hernandez M, Bhalla V. Underdiagnosis of primary aldosteronism: a review of screening and detection. Am J Kidney Dis. 2023;82(3):333-346.",
-    finePrint: "Based on diagnosis of primary aldosteronism."
-  },
-  {
-    id: 19,
-    text: "True or false? Aldosterone dysregulation increases<br> across hypertension stages.",
+    text: "In a real-world evidence study, The percentage of patients with HK and heart failure with subsequent HK recurrences increased during a 12-month follow-up period regardless of CKD* status.",
     type: "boolean",
-    options: ["True<sup>1*†‡§</sup>", "False"],
-    correctAnswer: "True<sup>1*†‡§</sup>",
-    explanation: "Aldosterone dysregulation increases across hypertension stages.<sup>1*†‡§</sup>",
-    additionalInfo: "<b>Abbreviations:</b> hr=hour; HTN=hypertension; rHTN=resistant hypertesion; UAldo=urinary aldosterone; US=United States.<br><br><b>Reference:</b> 1. Brown JM, Siddiqui M, Calhoun DA, et al. The unrecognized prevalence of primary aldosteronism: a cross-sectional study. Ann Intern Med. 2020;173(1):10-20.",
-    finePrint: "Cross-sectional cohort study characterizing the prevalence of primary aldosteronism (renin-independent aldosterone production) in 1015 patients (patients with normotension [n=289], stage 1 HTN [n=115], stage 2 HTN [n=203], and rHTN [n=408]) across 5 studies and 4 testing sites in the US. UAldo was measured in patients in high sodium balance with suppressed renin (seated: <1.0 mcg/L/hr, supine: <0.6 mcg/L/hr).<br>In a subset of 691 patients with suppressed renin activity and high sodium balance, the adjusted aldosterone dysregulation prevalence was: 19.9% untreated nomotension, 27.4% untreated stage 1 HTN, 40.0% untreated stage 2 HTN, and 58.0% treated rHTN.<br>Adjusted for age, body mass index, race, sex, history of diabetes mellitus, and 24-hr urinary sodium excretion.<br>From untreated nomotension, untreated stage 1 and 2 HTN, and treated rHTN."
+    options: ["True", "False"],
+    correctAnswer: "True",
+    explanation: "",
+    additionalInfo: "",
+    finePrint: ""
   }
 ];
 
