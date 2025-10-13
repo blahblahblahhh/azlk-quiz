@@ -74,27 +74,28 @@ defineEmits(['viewLeaderboard', 'playAgain']);
 /* Score display positioned in the dark box */
 .score-box {
   position: absolute;
-  top: 140px;
-  left: 530px;
-  width: 400px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 155px;
+  left: 780px;
+  width: ⁨;
   color: #FFC130;
   font-family: 'PF Fuel Grime', sans-serif;
-  font-size: 72px;
-  font-weight: 400;
+  color: #AA8306;
+  font-size: 149.233px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 82%; /* 122.371px */
+  letter-spacing: -2.985px;
   text-align: center;
 }
 
 /* See Where You Rank button - positioned over the orange button */
 .rank-button {
   position: absolute;
-  top: 115px;
-  right: 80px;
-  width: 320px;
-  height: 50px;
+  top: 148px;
+  right: 37px;
+  width: 458.174px;
+  height: 62px;
+  flex-shrink: 0;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -106,10 +107,11 @@ defineEmits(['viewLeaderboard', 'playAgain']);
 /* Play Again button - positioned over the orange button */
 .play-again-button {
   position: absolute;
-  top: 175px;
-  right: 80px;
-  width: 240px;
-  height: 50px;
+  top: 235px;
+  right: 87px;
+  width: 317px;
+  height: 62px;
+  flex-shrink: 0;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }

@@ -3,84 +3,57 @@
     <!-- Home button overlay -->
     <div class="home-button" @click="$emit('playAgain')"></div>
     
-    <!-- Row 1 -->
-    <div class="leaderboard-row row-1" :class="{ 'current-player': isCurrentPlayer(1) }">
-      <!-- Rank -->
-      <div class="rank">1</div>
-      <!-- Points -->
-      <div class="points">{{ getPlayerByRank(1)?.score ?? 'XXXX' }}</div>
-      <!-- Name -->
-      <div class="name">{{ getPlayerByRank(1)?.initials || 'JVG' }}</div>
-      <!-- Answers -->
-      <div class="answers">{{ getPlayerByRank(1)?.correctAnswers || '6' }}</div>
-      <!-- Time -->
-      <div class="time">{{ formatTime(getPlayerByRank(1)) }}</div>
-      <!-- Current player arrow -->
-      <div v-if="isCurrentPlayer(1)" class="current-player-arrow"></div>
-    </div>
+    <!-- Leaderboard Grid -->
+    <div class="leaderboard-grid">
+      <!-- Row 1 -->
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(1) }">1</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.score ?? 'XXXX' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.initials || 'JVG' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.correctAnswers || '6' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ formatTime(getPlayerByRank(1)) }}</div>
+      <div class="grid-arrow">
+        <div v-if="isCurrentPlayer(1)" class="current-player-arrow"></div>
+      </div>
 
-    <!-- Row 2 -->
-    <div class="leaderboard-row row-2" :class="{ 'current-player': isCurrentPlayer(2) }">
-      <!-- Rank -->
-      <div class="rank">2</div>
-      <!-- Points -->
-      <div class="points">{{ getPlayerByRank(2)?.score ?? 'XXXX' }}</div>
-      <!-- Name -->
-      <div class="name">{{ getPlayerByRank(2)?.initials || 'JVG' }}</div>
-      <!-- Answers -->
-      <div class="answers">{{ getPlayerByRank(2)?.correctAnswers || '6' }}</div>
-      <!-- Time -->
-      <div class="time">{{ formatTime(getPlayerByRank(2)) }}</div>
-      <!-- Current player arrow -->
-      <div v-if="isCurrentPlayer(2)" class="current-player-arrow"></div>
-    </div>
+      <!-- Row 2 -->
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(2) }">2</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.score ?? 'XXXX' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.initials || 'JVG' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.correctAnswers || '6' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ formatTime(getPlayerByRank(2)) }}</div>
+      <div class="grid-arrow">
+        <div v-if="isCurrentPlayer(2)" class="current-player-arrow"></div>
+      </div>
 
-    <!-- Row 3 -->
-    <div class="leaderboard-row row-3" :class="{ 'current-player': isCurrentPlayer(3) }">
-      <!-- Rank -->
-      <div class="rank">3</div>
-      <!-- Points -->
-      <div class="points">{{ getPlayerByRank(3)?.score ?? 'XXXX' }}</div>
-      <!-- Name -->
-      <div class="name">{{ getPlayerByRank(3)?.initials || 'JVG' }}</div>
-      <!-- Answers -->
-      <div class="answers">{{ getPlayerByRank(3)?.correctAnswers || '6' }}</div>
-      <!-- Time -->
-      <div class="time">{{ formatTime(getPlayerByRank(3)) }}</div>
-      <!-- Current player arrow -->
-      <div v-if="isCurrentPlayer(3)" class="current-player-arrow"></div>
-    </div>
+      <!-- Row 3 -->
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(3) }">3</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.score ?? 'XXXX' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.initials || 'JVG' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.correctAnswers || '6' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ formatTime(getPlayerByRank(3)) }}</div>
+      <div class="grid-arrow">
+        <div v-if="isCurrentPlayer(3)" class="current-player-arrow"></div>
+      </div>
 
-    <!-- Row 4 -->
-    <div class="leaderboard-row row-4" :class="{ 'current-player': isCurrentPlayer(4) }">
-      <!-- Rank -->
-      <div class="rank">4</div>
-      <!-- Points -->
-      <div class="points">{{ getPlayerByRank(4)?.score ?? 'XXXX' }}</div>
-      <!-- Name -->
-      <div class="name">{{ getPlayerByRank(4)?.initials || 'JVG' }}</div>
-      <!-- Answers -->
-      <div class="answers">{{ getPlayerByRank(4)?.correctAnswers || '5' }}</div>
-      <!-- Time -->
-      <div class="time">{{ formatTime(getPlayerByRank(4)) }}</div>
-      <!-- Current player arrow -->
-      <div v-if="isCurrentPlayer(4)" class="current-player-arrow"></div>
-    </div>
+      <!-- Row 4 -->
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(4) }">4</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.score ?? 'XXXX' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.initials || 'JVG' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.correctAnswers || '5' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ formatTime(getPlayerByRank(4)) }}</div>
+      <div class="grid-arrow">
+        <div v-if="isCurrentPlayer(4)" class="current-player-arrow"></div>
+      </div>
 
-    <!-- Row 5 -->
-    <div class="leaderboard-row row-5" :class="{ 'current-player': isCurrentPlayer(5) }">
-      <!-- Rank -->
-      <div class="rank">5</div>
-      <!-- Points -->
-      <div class="points">{{ getPlayerByRank(5)?.score ?? 'XXXX' }}</div>
-      <!-- Name -->
-      <div class="name">{{ getPlayerByRank(5)?.initials || 'JVG' }}</div>
-      <!-- Answers -->
-      <div class="answers">{{ getPlayerByRank(5)?.correctAnswers || '5' }}</div>
-      <!-- Time -->
-      <div class="time">{{ formatTime(getPlayerByRank(5)) }}</div>
-      <!-- Current player arrow -->
-      <div v-if="isCurrentPlayer(5)" class="current-player-arrow"></div>
+      <!-- Row 5 -->
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(5) }">5</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.score ?? 'XXXX' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.initials || 'JVG' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.correctAnswers || '5' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ formatTime(getPlayerByRank(5)) }}</div>
+      <div class="grid-arrow">
+        <div v-if="isCurrentPlayer(5)" class="current-player-arrow"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -225,73 +198,49 @@ defineEmits(['playAgain']);
   opacity: 0.8;
 }
 
-/* Base leaderboard row styles */
-.leaderboard-row {
+/* CSS Grid Leaderboard */
+.leaderboard-grid {
   position: absolute;
-  min-width: 700px;
-  height: 60px;
-  display: flex;
+  top: 338px;
+  left: 433px;
+  display: grid;
+  grid-template-columns: 80px 120px 100px 100px 120px 50px; /* rank points name answers time arrow */
+  grid-template-rows: repeat(5, 114px); /* 5 rows with spacing between them */
+  gap: 0;
   align-items: center;
-  justify-content: space-evenly;
-  left: 382px;
-  /* padding: 0 200px; */
 }
 
-/* Row positioning based on background image */
-.row-1 {
-  top: 341px;
-  left: 382px;
-}
-
-.row-2 {
-  top: 455px;
-}
-
-.row-3 {
-  top: 572px;
-}
-
-.row-4 {
-  top: 686px;
-}
-
-.row-5 {
-  top: 802px;
-}
-
-/* Text elements - evenly spaced within rows */
-.rank,
-.points,
-.name,
-.answers,
-.time {
+/* Grid cell styles */
+.grid-rank,
+.grid-points,
+.grid-name, 
+.grid-answers,
+.grid-time {
   color: #FFF;
   font-family: 'PF Fuel Grime', sans-serif;
   font-size: 48px;
   font-weight: 400;
   text-align: center;
-  flex: 1;
+  align-self: center;
+}
+
+.grid-arrow {
+  position: relative;
+  align-self: center;
 }
 
 /* Current player highlighting */
-.current-player .rank,
-.current-player .points,
-.current-player .name,
-.current-player .answers,
-.current-player .time {
+.current-player-text {
   color: #FFC130 !important;
 }
 
 /* Current player arrow */
 .current-player-arrow {
-  position: absolute;
-  right: 180px;
-  top: 50%;
-  transform: translateY(-50%);
   width: 0;
   height: 0;
   border-left: 30px solid #FFC130;
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
+  margin: 0 auto;
 }
 </style>

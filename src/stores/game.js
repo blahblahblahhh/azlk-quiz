@@ -31,8 +31,8 @@ const questions = [
     options: ["True", "False"],
     correctAnswer: "True",
     explanation: "",
-    additionalInfo: "",
-    finePrint: ""
+    additionalInfo: "true",
+    finePrint: "true"
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ const questions = [
     correctAnswer: "83%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ const questions = [
     correctAnswer: "82%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 6,
@@ -270,18 +270,16 @@ export const useGameStore = defineStore('game', () => {
     console.log('Initializing questions...');
     
     // Reverting to original code that selects first 3 + random 4:
-    const firstThree = questions.slice(0, 3);
+    /*const firstThree = questions.slice(0, 3);
     const remaining = questions.slice(3);
     const shuffled = remaining.sort(() => Math.random() - 0.5);
     const randomFour = shuffled.slice(0, 4);
-    questionsList.value = [...firstThree, ...randomFour];
+    questionsList.value = [...firstThree, ...randomFour];*/
     
     // The temporary code that kept first 3 and added all remaining:
-    /*
     const firstThree = questions.slice(0, 3);
     const remaining = questions.slice(3);
     questionsList.value = [...firstThree, ...remaining];
-    */
     
     await nextTick();
     console.log('Questions initialized:', questionsList.value);

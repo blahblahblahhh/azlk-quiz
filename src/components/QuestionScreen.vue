@@ -128,7 +128,10 @@
                 <div class="explanation-banner-skewed">
                   <div class="explanation-content">
                     <div v-if="question.explanation && question.explanation.trim()" class="explanation-text" v-html="question.explanation"></div>
-                    <img v-else :src="['/question-' + question.id + '-box.png']">
+                    <div v-else class="explanation-images">
+                      <img src="/correct-check.png" class="correct-check">
+                      <img :src="['/question-' + question.id + '-box.png']" class="question-box">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -152,10 +155,9 @@
         </transition>
         
         <transition name="fade">
-          <div v-if="showExplanation && question.hasOwnProperty('finePrint')" :class="['question-' + question.id + ' fine-print']">
+          <div v-if="showExplanation && question.finePrint && question.finePrint.trim()" :class="['question-' + question.id + ' fine-print']">
             <div class="fine-print-content">
-              <div v-if="question.finePrint && question.finePrint.trim()" class="fine-print-text" v-html="question.finePrint"></div>
-              <img v-else :src="['/question-' + question.id + '-fineprint.png']">
+              <img :src="['/question-' + question.id + '-fineprint.png']">
             </div>
           </div>
         </transition>
@@ -766,7 +768,8 @@ h2 {
 
 .explanation-banner-skewed {
   width: 1781.886px;
-  height: 132px;
+  min-height: 132px;
+  padding: 35px;
   background-color: #00917D;
   transform: skew(-15deg);
   display: flex;
@@ -783,6 +786,7 @@ h2 {
   justify-content: center;
   width: 100%;
   height: 100%;
+  text-align: center;
 }
 
 .explanation-banner-skewed .explanation-content .explanation-text {
@@ -1602,6 +1606,13 @@ h2 {
   flex-shrink: 0;
 }
 
+/* Question 4 */
+.question-4.fine-print {
+  width: 904px;
+  height: 126px;
+  flex-shrink: 0;
+}
+
 .question-2 .explanation-container {
   right: -235px;
 }
@@ -1794,5 +1805,24 @@ h2 {
 .question-14 .option-content img,
 .question-19 .option-content img {
     width: 151px;
+}
+
+/* Explanation images container */
+.explanation-images {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  text-align: center;
+  justify-content: center;
+}
+
+.explanation-images .correct-check {
+  width: 39px;
+  height: 37px;
+  flex-shrink: 0;
+}
+
+.explanation-images .question-box {
+  flex-shrink: 0;
 }
 </style>
