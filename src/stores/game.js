@@ -26,7 +26,7 @@ const questions = [
   },
   {
     id: 3,
-    text: "Serum potassium ≥5.0 mEq/L was associated with an increased risk of all-cause mortality in patients with hyperkalemia, regardless of comorbidity profile.",
+    text: "Serum potassium ≥5.0 mEq/L was associated with an increased risk of all-cause<br>mortality in patients with hyperkalemia, regardless of comorbidity profile.",
     type: "boolean",
     options: ["True", "False"],
     correctAnswer: "True",
@@ -36,7 +36,7 @@ const questions = [
   },
   {
     id: 4,
-    text: "In a CKD subgroup analysis of a real-world evidence study of US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk of progression to ESKD* with RAASi† down-titration vs patients who maintained or uptitrated their RAASi dose?",
+    text: "In a CKD subgroup analysis of a real-world evidence study of US patients<br>with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk<br>of progression to ESKD<sup>*</sup> with RAASi<sup>†</sup> down-titration vs patients who<br>maintained or uptitrated their RAASi dose?",
     type: "multiple",
     options: ["27%", "45%", "60%", "83%"],
     correctAnswer: "83%",
@@ -46,7 +46,7 @@ const questions = [
   },
   {
     id: 5,
-    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk of progression to ESKD* with RAASi† discontinuation vs patients who maintained or uptitrated their RAASi dose?",
+    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK,<br>What was the increased risk of progression to ESKD<sup>*</sup> with RAASi<sup>†</sup><br>discontinuation vs patients who maintained or uptitrated their RAASi dose?",
     type: "multiple",
     options: ["55%", "67%", "74%", "82%"],
     correctAnswer: "82%",
@@ -56,7 +56,7 @@ const questions = [
   },
   {
     id: 6,
-    text: "In US patients with Stage 3 or 4 CKD, What was the increased risk of all-cause inpatient hospitalizations for patients with recurrent HK vs those without HK?",
+    text: "In US patients with Stage 3 or 4 CKD, What was the increased risk<br>of all-cause inpatient hospitalizations for patients with recurrent HK<br>vs those without HK?",
     type: "multiple",
     options: ["1.3x", "1.5x", "1.7x", ">2.0x"],
     correctAnswer: ">2.0x",
@@ -76,7 +76,7 @@ const questions = [
   },
   {
     id: 8,
-    text: "What was the percentage of patients with HK in the US treated with a K+ binder?",
+    text: "What was the percentage of patients with HK in the US treated with a K<sup>+</sup> binder?",
     type: "multiple",
     options: ["8%", "12%", "19%", "27%"],
     correctAnswer: "8%",
@@ -116,7 +116,7 @@ const questions = [
   },
   {
     id: 12,
-    text: "The KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD supports the use of a K+ binder rather than decreasing or discontinuing ACEi/ARB therapy.",
+    text: "The KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD supports the use of a K<sup>+</sup> binder rather than decreasing or discontinuing ACEi/ARB therapy.",
     type: "boolean",
     options: ["True", "False"],
     correctAnswer: "True",
@@ -126,7 +126,7 @@ const questions = [
   },
   {
     id: 13,
-    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk (%) of HF-related hospitalizations or ED visits with RAASi* down-titration vs patients who maintained or uptitrated their RAASi* dose?",
+    text: "In US patients with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk (%) of HF-related hospitalizations or ED visits with RAASi<sup>*</sup> down-titration vs patients who maintained or uptitrated their RAASi<sup>*</sup> dose?",
     type: "multiple",
     options: ["20%", "30%", "40%", "50%"],
     correctAnswer: "40%",
@@ -176,7 +176,7 @@ const questions = [
   },
   {
     id: 18,
-    text: "In a real-world evidence study, The percentage of patients with HK and heart failure with subsequent HK recurrences increased during a 12-month follow-up period regardless of CKD* status.",
+    text: "In a real-world evidence study, The percentage of patients with HK and heart failure with subsequent HK recurrences increased during a 12-month follow-up period regardless of CKD<sup>*</sup> status.",
     type: "boolean",
     options: ["True", "False"],
     correctAnswer: "True",

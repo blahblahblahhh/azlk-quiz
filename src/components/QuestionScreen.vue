@@ -48,7 +48,8 @@
             </div>
             
             <!-- Question Text -->
-            <h2 class="question-proper" v-html="question.text"></h2>
+            <img v-if="questionImageExists" :src="'/question-' + question.id + '.png'" class="question-image" alt="Question">
+            <h2 v-else class="question-proper" v-html="question.text"></h2>
             
             <!-- Answer Options Grid -->
             <div class="answer-options-grid" :class="{ 'four-options': question.options.length === 4 }">
@@ -192,6 +193,7 @@ const showNotes = ref(false);
 const backgroundVideo = ref(null);
 const videoReady = ref(false);
 const showQuestionContent = ref(false);
+const questionImageExists = ref(false);
 
 const props = defineProps({
   question: {
@@ -379,6 +381,23 @@ function onVideoError(event) {
   }, 100);
 }
 
+// Check if question image exists
+function checkQuestionImage() {
+  if (!props.question?.id) {
+    questionImageExists.value = false;
+    return;
+  }
+  
+  const img = new Image();
+  img.onload = () => {
+    questionImageExists.value = true;
+  };
+  img.onerror = () => {
+    questionImageExists.value = false;
+  };
+  img.src = `/question-${props.question.id}.png`;
+}
+
 // Video segment durations for each question (in seconds)
 function getVideoDuration(questionIndex) {
   const durations = [
@@ -451,6 +470,9 @@ function stopVideo() {
 watch(() => props.currentQuestionIndex, (newIndex, oldIndex) => {
   if (newIndex !== oldIndex) {
     console.log('New question detected, index:', newIndex);
+    
+    // Check if question image exists
+    checkQuestionImage();
     
     if (newIndex === 0 && oldIndex === undefined) {
       // First question of the game - start from beginning
@@ -570,7 +592,7 @@ h2 {
 }
 
 .question-proper {
-  padding-top: 3rem;
+  /* padding-top: 3rem; */
   color: var(--Color-Brand-white, #FFF);
   text-align: center;
   font-family: "Bebas Neue Pro";
@@ -624,7 +646,7 @@ h2 {
   margin: 0;
   width: 100%;
   max-width: 100%;
-  padding-top: 93px;
+  /* padding-top: 93px; */
 }
 
 /* Answer Options Grid */
@@ -1530,283 +1552,6 @@ h2 {
   width: 852px;
 }
 
-/* Explanation text width and padding overrides */
-.question-1 .explanation-text {
-  padding-top: 60px;
-}
-
-.question-2 .explanation-text {
-  padding-top: 35px;
-}
-
-.question-6 .explanation-text {
-  padding-top: 55px;
-  width: 305.821px;
-  height: 333.608px;
-  flex-shrink: 0;
-}
-
-.question-9 .explanation-text,
-.question-8 .explanation-text,
-.question-11 .explanation-text,
-.question-12 .explanation-text,
-.question-13 .explanation-text,
-.question-16 .explanation-text,
-.question-17 .explanation-text,
-.question-18 .explanation-text {
-  padding-top: 45px;
-}
-
-.question-10 .explanation-text,
-.question-13 .explanation-text,
-.question-14 .explanation-text,
-.question-15 .explanation-text,
-.question-19 .explanation-text {
-  padding-top: 37px;
-  width: 320.052px;
-}
-
-.question-2 .explanation-text img {
-  width: 324px;
-}
-
-.question-9 .explanation-text,
-.question-8 .explanation-text {
-  width: 320.052px;
-}
-
-.question-11 .explanation-text {
-  width: 352.679px;
-}
-
-/* Specific styles for individual questions */
-
-/* Question 1 */
-.question-1.fine-print {
-  width: 852px;
-}
-
-.question-1 .explanation-text img {
-  height: 248px;
-  width: 320px;
-}
-
-.question-1 .question-option {
-  width: 467.4px !important;
-}
-
-.question-1 .question-text {
-  width: 900px;
-}
-
-/* Question 2 */
-.question-2.fine-print {
-  width: 904.405px;
-  height: 126px;
-  flex-shrink: 0;
-}
-
-/* Question 4 */
-.question-4.fine-print {
-  width: 904px;
-  height: 126px;
-  flex-shrink: 0;
-}
-
-.question-2 .explanation-container {
-  right: -235px;
-}
-
-.question-2 .question-option {
-  width: 824px !important;
-}
-
-.question-2 .question-text {
-  width: 826px;
-}
-
-.question-2 .show-explanation {
-  max-width: unset;
-}
-
-/* Question 3 */
-.question-3 .question-text {
-  width: 892px;
-}
-
-.question-3 .question-option {
-  width: 467.4px;
-}
-
-/* Question 4 */
-.question-4 .question-option {
-  width: 729px;
-}
-
-.question-4 .question-wrapper.show-explanation {
-  max-width: unset;
-  width: 1230px;
-}
-
-/* Question 5 */
-.question-5 .question-option {
-  width: 220px;
-}
-
-.question-5 .question-wrapper.show-explanation {
-  /* display: flex; */
-  max-width: 900px;
-  margin: 50px auto;
-  /* justify-content: center;
-  align-items: center; */
-}
-
-/* Question 6 */
-.question-6 .question-wrapper.show-explanation {
-  display: flex;
-  max-width: 900px;
-  margin: 50px auto;
-}
-
-.question-6 .question-option {
-  width: 467.4px;
-}
-
-/* Question 7 */
-.question-7 .question-wrapper.show-explanation {
-  max-width: unset;
-  width: 1130px;
-}
-
-.question-7 .question-option {
-  width: 618px;
-}
-
-/* Question 8 */
-.question-8 .question-wrapper.show-explanation {
-  display: flex;
-  min-width: 1130px;
-  margin: 50px auto;
-}
-
-.question-8 .question-option {
-  width: 618px;
-}
-
-.question-8.fine-print {
-  width: 651px;
-}
-
-/* Question 9 */
-.question-9 .question-wrapper.show-explanation {
-  display: flex;
-  min-width: 1120px;
-  margin: 50px auto;
-}
-
-.question-9 .question-option {
-  width: 618px;
-}
-
-/* Q 10 */
-.question-10.fine-print {
-  width: 252px;
-}
-
-/* Question 11 */
-.question-11 .option-text {
-  font-size: 28px !important; 
-}
-
-.question-11 .question-wrapper.show-explanation {
-  display: flex;
-  min-width: 1120px;
-  margin: 50px auto;
-}
-
-.question-11 .question-option {
-  width: 618px;
-}
-
-/* Question 15 */
-.question-15 .question-wrapper.show-explanation {
-  display: flex;
-  min-width: 1120px;
-  margin: 50px auto;
-}
-
-.question-15 .question-option {
-  width: 618px;
-}
-
-/* Question 18 */
-.question-18 .question-wrapper.show-explanation {
-  display: flex;
-  min-width: 1050px;
-  margin: 50px auto;
-}
-
-.question-18 .question-option {
-  width: 541px;
-}
-
-/* Question 19 */
-.question-19.fine-print {
-  width: 770px;
-}
-
-.corner-home-button {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  
-}
-
-.question-3 h2.question-proper,
-.question-6 h2.question-proper,
-.question-16 h2.question-proper{
-    font-size: 47px;
-}
-
-.question-12 h2.question-proper,
-.question-13 h2.question-proper,
-.question-14 h2.question-proper {
-    font-size: 42px;
-}
-
-.option-content img {
-    margin-left: 15px;
-}
-
-.question-1 .option-content img {
-    width: 351px;
-}
-
-.question-2 .option-content img {
-    width: 318px;
-}
-
-.question-3 .option-content img {
-    width: 113px;
-}
-
-.question-5 .option-content img {
-    width: 111px;
-}
-
-.question-7 .option-content img {
-    width: 503px;
-}
-
-.question-8 .option-content img {
-    width: 292px;
-}
-
-.question-14 .option-content img,
-.question-19 .option-content img {
-    width: 151px;
-}
-
 /* Explanation images container */
 .explanation-images {
   display: flex;
@@ -1824,5 +1569,12 @@ h2 {
 
 .explanation-images .question-box {
   flex-shrink: 0;
+}
+
+/* Question Image */
+.question-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
 }
 </style>
