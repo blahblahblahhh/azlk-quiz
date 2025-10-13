@@ -440,7 +440,43 @@ function startVideoIntro() {
     
     showQuestionContent.value = false;
     videoIntroComplete.value = false;
-    backgroundVideo.value.currentTime = segment.start;
+    
+    // Better Chrome compatibility for seeking
+    const seekToTime = () => {
+      return new Promise((resolve, reject) => {
+        const video = backgroundVideo.value;
+        if (!video) {
+          reject(new Error('Video element not available'));
+          return;
+        }
+        
+        const onSeeked = () => {
+          video.removeEventListener('seeked', onSeeked);
+          console.log(`Successfully seeked to ${segment.start}s, actual time: ${video.currentTime}s`);
+          resolve();
+        };
+        
+        const onError = () => {
+          video.removeEventListener('error', onError);
+          reject(new Error('Seek failed'));
+        };
+        
+        video.addEventListener('seeked', onSeeked);
+        video.addEventListener('error', onError);
+        video.currentTime = segment.start;
+        
+        // Fallback timeout
+        setTimeout(() => {
+          video.removeEventListener('seeked', onSeeked);
+          video.removeEventListener('error', onError);
+          if (Math.abs(video.currentTime - segment.start) > 1) {
+            console.warn(`Seek may have failed. Target: ${segment.start}s, Actual: ${video.currentTime}s`);
+          }
+          resolve();
+        }, 1000);
+      });
+    };
+    
     backgroundVideo.value.playbackRate = 1;
     
     timeUpdateHandler.value = () => {
@@ -465,9 +501,21 @@ function startVideoIntro() {
     };
     
     backgroundVideo.value.addEventListener('timeupdate', timeUpdateHandler.value);
-    backgroundVideo.value.play().then(() => {
-      console.log(`Video segment started playing from ${segment.start}s`);
-    }).catch(console.error);
+    
+    // Use the improved seeking function before playing
+    seekToTime().then(() => {
+      return backgroundVideo.value.play();
+    }).then(() => {
+      console.log(`Video segment started playing from ${segment.start}s (actual: ${backgroundVideo.value.currentTime}s)`);
+    }).catch(error => {
+      console.error('Video play error:', error);
+      // Fallback: show content immediately if video fails
+      showQuestionContent.value = true;
+      videoIntroComplete.value = true;
+      setTimeout(() => {
+        gameStore.startTimer();
+      }, 500);
+    });
   } else if (!videoReady.value && videoLoadAttempts.value <= 50) {
     console.log('Video not ready yet, waiting...');
     setTimeout(() => startVideoIntro(), 100);
