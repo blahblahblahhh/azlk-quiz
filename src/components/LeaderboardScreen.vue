@@ -8,7 +8,7 @@
       <!-- Rank -->
       <div class="rank">1</div>
       <!-- Points -->
-      <div class="points">{{ getPlayerByRank(1)?.score || 'XXXX' }}</div>
+      <div class="points">{{ getPlayerByRank(1)?.score ?? 'XXXX' }}</div>
       <!-- Name -->
       <div class="name">{{ getPlayerByRank(1)?.initials || 'JVG' }}</div>
       <!-- Answers -->
@@ -24,7 +24,7 @@
       <!-- Rank -->
       <div class="rank">2</div>
       <!-- Points -->
-      <div class="points">{{ getPlayerByRank(2)?.score || 'XXXX' }}</div>
+      <div class="points">{{ getPlayerByRank(2)?.score ?? 'XXXX' }}</div>
       <!-- Name -->
       <div class="name">{{ getPlayerByRank(2)?.initials || 'JVG' }}</div>
       <!-- Answers -->
@@ -40,7 +40,7 @@
       <!-- Rank -->
       <div class="rank">3</div>
       <!-- Points -->
-      <div class="points">{{ getPlayerByRank(3)?.score || 'XXXX' }}</div>
+      <div class="points">{{ getPlayerByRank(3)?.score ?? 'XXXX' }}</div>
       <!-- Name -->
       <div class="name">{{ getPlayerByRank(3)?.initials || 'JVG' }}</div>
       <!-- Answers -->
@@ -56,7 +56,7 @@
       <!-- Rank -->
       <div class="rank">4</div>
       <!-- Points -->
-      <div class="points">{{ getPlayerByRank(4)?.score || 'XXXX' }}</div>
+      <div class="points">{{ getPlayerByRank(4)?.score ?? 'XXXX' }}</div>
       <!-- Name -->
       <div class="name">{{ getPlayerByRank(4)?.initials || 'JVG' }}</div>
       <!-- Answers -->
@@ -72,7 +72,7 @@
       <!-- Rank -->
       <div class="rank">5</div>
       <!-- Points -->
-      <div class="points">{{ getPlayerByRank(5)?.score || 'XXXX' }}</div>
+      <div class="points">{{ getPlayerByRank(5)?.score ?? 'XXXX' }}</div>
       <!-- Name -->
       <div class="name">{{ getPlayerByRank(5)?.initials || 'JVG' }}</div>
       <!-- Answers -->
@@ -128,18 +128,20 @@ onMounted(async () => {
 });
 
 function processLeaderboard() {
-  // Create a copy of the current player with the isCurrentPlayer flag
-  const currentPlayerEntry = props.currentPlayer?.initials 
-    ? { ...props.currentPlayer, isCurrentPlayer: true } 
-    : { initials: 'TSD', score: 560, isCurrentPlayer: true };
-  
   // Use the database leaderboard data
   let allEntries = [...gameStore.leaderboard];
   
-  // If coming from results screen, include the current player in the leaderboard
-  if (props.isFromResultsScreen) {
-    // Add current player
-    allEntries.push(currentPlayerEntry);
+  // If coming from results screen, mark the current player in the existing leaderboard
+  if (props.isFromResultsScreen && props.currentPlayer?.initials) {
+    // Find and mark the current player's entry in the leaderboard instead of adding a duplicate
+    allEntries = allEntries.map(entry => {
+      // Match by initials, score, and recent timestamp (within last few seconds)
+      const isRecentEntry = entry.date && new Date() - new Date(entry.date) < 5000; // 5 seconds
+      const isCurrentPlayer = entry.initials === props.currentPlayer.initials && 
+                             entry.score === props.currentPlayer.score && 
+                             isRecentEntry;
+      return isCurrentPlayer ? { ...entry, isCurrentPlayer: true } : entry;
+    });
   }
   
   // Sort by score (descending)

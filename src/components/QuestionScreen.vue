@@ -365,9 +365,7 @@ const valveShakeDuration = computed(() => {
 // Video event handlers
 function onVideoLoaded() {
   console.log('Video metadata loaded');
-  if (backgroundVideo.value) {
-    backgroundVideo.value.currentTime = 0;
-  }
+  // Don't automatically reset currentTime here - let startVideoIntro handle positioning
 }
 
 function onVideoCanPlay() {
