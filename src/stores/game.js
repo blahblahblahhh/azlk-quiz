@@ -62,7 +62,7 @@ const questions = [
     correctAnswer: ">2.0x",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 7,
@@ -72,17 +72,17 @@ const questions = [
     correctAnswer: "35%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 8,
-    text: "What was the percentage of patients with HK in the US treated with a K<sup>+</sup> binder?",
+    text: "What was the percentage of patients with HK<br>in the US treated with a K<sup>+</sup> binder?",
     type: "multiple",
     options: ["8%", "12%", "19%", "27%"],
     correctAnswer: "8%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 9,
@@ -92,7 +92,7 @@ const questions = [
     correctAnswer: "56%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 10,
@@ -102,7 +102,7 @@ const questions = [
     correctAnswer: "~32 days",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 11,
@@ -112,7 +112,7 @@ const questions = [
     correctAnswer: "True",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 12,
@@ -132,7 +132,7 @@ const questions = [
     correctAnswer: "40%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 14,
@@ -142,7 +142,7 @@ const questions = [
     correctAnswer: "43%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 15,
@@ -152,7 +152,7 @@ const questions = [
     correctAnswer: "74%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 16,
@@ -162,7 +162,7 @@ const questions = [
     correctAnswer: "True",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 17,
@@ -172,7 +172,7 @@ const questions = [
     correctAnswer: "37%",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   },
   {
     id: 18,
@@ -182,7 +182,7 @@ const questions = [
     correctAnswer: "True",
     explanation: "",
     additionalInfo: "",
-    finePrint: ""
+    finePrint: "true"
   }
 ];
 

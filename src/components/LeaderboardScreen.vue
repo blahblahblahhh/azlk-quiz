@@ -204,7 +204,7 @@ defineEmits(['playAgain']);
   top: 338px;
   left: 433px;
   display: grid;
-  grid-template-columns: 80px 120px 100px 100px 120px 50px; /* rank points name answers time arrow */
+  grid-template-columns: 182px 227px 200px 248px 128px 435px; /* rank points name answers time arrow */
   grid-template-rows: repeat(5, 114px); /* 5 rows with spacing between them */
   gap: 0;
   align-items: center;
@@ -221,7 +221,9 @@ defineEmits(['playAgain']);
   font-size: 48px;
   font-weight: 400;
   text-align: center;
-  align-self: center;
+  align-self: flex-start;
+  justify-content: flex-start;
+  display: flex;
 }
 
 .grid-arrow {

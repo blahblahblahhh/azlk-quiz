@@ -150,10 +150,13 @@
               <span>Abbreviations & References</span>
             </button>
             <div v-if="showAdditionalInfo" class="explanation-desc">
-              <img :src="['/question-' + question.id + '-notes.png']">
+              <img :class="['question-content', 'question-' + question.id + ' explanation-desc-img']" :src="['/question-' + question.id + '-notes.png']">
             </div>
           </div>
         </transition>
+        
+        <!-- Fineprint Prepend Image (visible for specific questions when explanation is NOT showing) -->
+        <img v-if="shouldShowFineprintPrepend" src="/fineprint-prepend.png" class="fineprint-prepend">
         
         <transition name="fade">
           <div v-if="showExplanation && question.finePrint && question.finePrint.trim()" :class="['question-' + question.id + ' fine-print']">
@@ -194,6 +197,12 @@ const backgroundVideo = ref(null);
 const videoReady = ref(false);
 const showQuestionContent = ref(false);
 const questionImageExists = ref(false);
+
+// Questions that should show the fineprint prepend image
+const shouldShowFineprintPrepend = computed(() => {
+  const questionsWithPrepend = [3, 4, 5, 6, 7];
+  return questionsWithPrepend.includes(props.question?.id) && !props.showExplanation;
+});
 
 const props = defineProps({
   question: {
@@ -653,7 +662,7 @@ h2 {
 .answer-options-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
   margin: 0 auto;
   padding-top: 20px;
 }
@@ -697,7 +706,7 @@ h2 {
 
 /* Four options layout - smaller width */
 .answer-options-grid.four-options .answer-option-skewed {
-  width: 366.751px;
+  width: 342px;
 }
 
 .answer-option-skewed:hover {
@@ -782,7 +791,7 @@ h2 {
 
 /* Explanation Banner */
 .explanation-banner-container {
-  margin-top: 60px;
+  /* margin-top: 19px; */
   display: flex;
   justify-content: center;
   width: 100%;
@@ -1412,7 +1421,7 @@ h2 {
 
 .explanation-desc {
   background-color: #25575F;
-  padding: 20px 150px 0px 50px;
+  padding: 20px 150px 20px 50px;
   overflow-y: auto;
   width: 100%;
   min-width: 1143.236px;
@@ -1439,8 +1448,8 @@ h2 {
 .fine-print {
   margin-top: 20px;
   position: absolute;
-  bottom: 100px;
-  left: 64px;
+  bottom: 28px;
+  left: 39px;
 }
 
 .fine-print-content {
@@ -1549,7 +1558,7 @@ h2 {
 
 /* Fine-print styles */
 .fine-print {
-  width: 852px;
+  max-width: 1555px;
 }
 
 /* Explanation images container */
@@ -1575,6 +1584,51 @@ h2 {
 .question-image {
   max-width: 100%;
   height: auto;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
+}
+
+/* Fineprint Prepend Images */
+.fineprint-prepend {
+  position: absolute;
+  bottom: 26px;
+  left: 39px;
+  z-index: 10;
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* individual question resizing */
+
+.question-1 .question-image {
+  max-width: 78%;
+  margin: 0 auto;
+}
+
+.question-2 .question-box {
+  width: 936px;
+  height: 39px;
+  flex-shrink: 0;
+}
+
+.question-4 .explanation-banner-skewed {
+  width: 1586.886px;
+  height: 132px;
+  flex-shrink: 0;
+}
+
+.question-5 .explanation-banner-container {
+  width: 1485.886px;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.question-7 .explanation-banner-skewed {
+  width: 1492px;
+  height: 103px;
+  flex-shrink: 0;
 }
 </style>
