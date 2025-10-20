@@ -39,7 +39,7 @@ const questions = [
     text: "In a CKD subgroup analysis of a real-world evidence study of US patients<br>with Stage 3 or 4 CKD and/or HF and HK, What was the increased risk<br>of progression to ESKD<sup>*</sup> with RAASi<sup>†</sup> down-titration vs patients who<br>maintained or uptitrated their RAASi dose?",
     type: "multiple",
     options: ["27%", "45%", "60%", "83%"],
-    correctAnswer: "83%",
+    correctAnswer: "60%",
     explanation: "",
     additionalInfo: "",
     finePrint: "true"
@@ -49,7 +49,7 @@ const questions = [
     text: "In US patients with Stage 3 or 4 CKD and/or HF and HK,<br>What was the increased risk of progression to ESKD<sup>*</sup> with RAASi<sup>†</sup><br>discontinuation vs patients who maintained or uptitrated their RAASi dose?",
     type: "multiple",
     options: ["55%", "67%", "74%", "82%"],
-    correctAnswer: "82%",
+    correctAnswer: "74%",
     explanation: "",
     additionalInfo: "",
     finePrint: "true"
@@ -69,7 +69,7 @@ const questions = [
     text: "In US patients with Stage 3 or 4 CKD, What was the increased risk of all-cause mortality for patients with recurrent HK vs those without HK?",
     type: "multiple",
     options: ["18%", "24%", "29%", "35%"],
-    correctAnswer: "35%",
+    correctAnswer: "29%",
     explanation: "",
     additionalInfo: "",
     finePrint: "true"
@@ -79,7 +79,7 @@ const questions = [
     text: "What was the percentage of patients with HK<br>in the US treated with a K<sup>+</sup> binder?",
     type: "multiple",
     options: ["8%", "12%", "19%", "27%"],
-    correctAnswer: "8%",
+    correctAnswer: "12%",
     explanation: "",
     additionalInfo: "",
     finePrint: "true"
@@ -99,7 +99,7 @@ const questions = [
     text: "In a real-world evidence study, How long did it take for patients with HK and Stage 3 or 4 CKD to experience their first HK recurrence after a medical nutrition visit within 6 months?",
     type: "multiple",
     options: ["~32 days", "~45 days", "~53 days", "~60 days"],
-    correctAnswer: "~32 days",
+    correctAnswer: "~45 days",
     explanation: "",
     additionalInfo: "",
     finePrint: "true"

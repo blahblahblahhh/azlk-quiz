@@ -179,7 +179,7 @@
           <button 
             class="btn btn-primary btn-lg"
             @click="$emit('next')"
-            :disabled="!selectedAnswer && timeRemaining > 0"
+            :disabled="!selectedAnswer && timeRemaining > 0 && !showExplanation"
           >
             <span>{{ isLastQuestion ? 'Finish' : 'Next Question' }}</span>
             <img src="/next-q.png">
@@ -210,7 +210,7 @@ const questionImageExists = ref(false);
 
 // Questions that should show the fineprint prepend image
 const shouldShowFineprintPrepend = computed(() => {
-  const questionsWithPrepend = [3, 4, 5, 6, 7];
+  const questionsWithPrepend = [3, 4, 5, 6, 7, 13, 14];
   return questionsWithPrepend.includes(props.question?.id) && !props.showExplanation;
 });
 
