@@ -1685,7 +1685,7 @@ h2 {
 
 /* Fine-print styles */
 .fine-print {
-  max-width: 1555px;
+  max-width: 1485px;
 }
 
 /* Explanation images container */
