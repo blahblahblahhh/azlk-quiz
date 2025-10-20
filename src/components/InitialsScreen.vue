@@ -1,6 +1,22 @@
-<!-- InitialsScreen.vue with modified play-icon background -->
+<!-- InitialsScreen.vue with TOS step -->
 <template>
-  <div class="initials-screen">
+  <!-- TOS Screen -->
+  <div v-if="showTOS" class="tos-screen">
+    <!-- Home button overlay -->
+    <div class="home-button" @click="$emit('back')"></div>
+    
+    <!-- Go Back button overlay -->
+    <div class="go-back-button" @click="goBackFromTOS"></div>
+    
+    <!-- Continue button overlay -->
+    <div 
+      class="continue-button continue-button--active"
+      @click="$emit('continue', initials)"
+    ></div>
+  </div>
+  
+  <!-- Initial Initials Screen -->
+  <div v-else class="initials-screen">
     <!-- Home button overlay -->
     <div class="home-button" @click="$emit('back')"></div>
     
@@ -23,7 +39,7 @@
     <div 
       class="continue-button" 
       :class="{ 'continue-button--active': initials }"
-      @click="initials && $emit('continue', initials)"
+      @click="initials && showTOSScreen()"
     ></div>
   </div>
 </template>
@@ -32,10 +48,19 @@
 import { ref } from 'vue';
 
 const initials = ref('');
+const showTOS = ref(false);
 const emit = defineEmits(['continue', 'back', 'home']);
 
 function formatInitials(event) {
   initials.value = event.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+}
+
+function showTOSScreen() {
+  showTOS.value = true;
+}
+
+function goBackFromTOS() {
+  showTOS.value = false;
 }
 </script>
 
@@ -44,6 +69,16 @@ function formatInitials(event) {
   width: 100vw;
   height: 100vh;
   background-image: url('/initials.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.tos-screen {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/tos.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -125,6 +160,16 @@ function formatInitials(event) {
   cursor: not-allowed;
   transition: opacity 0.2s ease, transform 0.2s ease;
   opacity: 0.5;
+}
+
+/* TOS continue button - smaller and different position */
+.tos-screen .continue-button {
+  bottom: 62px;
+  right: 321px;
+  width: 326px;
+  height: 70px;
+  aspect-ratio: 163/32;
+  flex-shrink: 0;
 }
 
 .continue-button--active {

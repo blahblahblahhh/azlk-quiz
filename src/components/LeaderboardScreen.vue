@@ -240,9 +240,10 @@ defineEmits(['playAgain']);
 .current-player-arrow {
   width: 0;
   height: 0;
-  border-left: 30px solid #FFC130;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
+  border-right: 98px solid #FFC130;
+  border-top: 49px solid transparent;
+  border-bottom: 49px solid transparent;
   margin: 0 auto;
+  margin-top: -45px;
 }
 </style>

@@ -12,13 +12,17 @@
     
     <!-- Animated Skewed Containers -->
     <div class="skewed-containers">
-      <div 
-        v-for="(container, index) in visibleContainers" 
-        :key="`${wordIndex}-${index}`"
-        class="skewed-container"
-        :style="{ animationDelay: `${index * 0.2}s` }"
-      >
-        {{ container }}
+      <!-- Container 1 -->
+      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 1 }">
+        1
+      </div>
+      <!-- Container 2 -->
+      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 2 }">
+        2
+      </div>
+      <!-- Container 3 -->
+      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 3 }">
+        3
       </div>
     </div>
   </div>
@@ -29,33 +33,33 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 
 const words = ['Ready,', 'Set,', 'WIN!'];
 const currentWord = ref('');
-const wordIndex = ref(0);
+const currentStep = ref(0);
 const emit = defineEmits(['complete']);
 let interval = null;
 
-// Computed property for which containers to show
-const visibleContainers = computed(() => {
-  const containers = [];
-  for (let i = 1; i <= wordIndex.value + 1; i++) {
-    containers.push(i.toString());
-  }
-  return containers;
-});
-
 onMounted(() => {
-  currentWord.value = words[0];
+  // Step 1: Container 1 slides in + "Ready,"
+  setTimeout(() => {
+    currentStep.value = 1;
+    currentWord.value = words[0]; // "Ready,"
+  }, 0);
   
-  interval = setInterval(() => {
-    wordIndex.value++;
-    if (wordIndex.value < words.length) {
-      currentWord.value = words[wordIndex.value];
-    } else {
-      clearInterval(interval);
-      setTimeout(() => {
-        emit('complete');
-      }, 1000); // Wait 1 second after final animation
-    }
-  }, 1500); // Increased timing to 1.5 seconds per word
+  // Step 2: Container 2 slides in + "Set,"
+  setTimeout(() => {
+    currentStep.value = 2;
+    currentWord.value = words[1]; // "Set,"
+  }, 1000);
+  
+  // Step 3: Container 3 slides in + "WIN!"
+  setTimeout(() => {
+    currentStep.value = 3;
+    currentWord.value = words[2]; // "WIN!"
+  }, 2000);
+  
+  // Complete after brief pause
+  setTimeout(() => {
+    emit('complete');
+  }, 3000);
 });
 
 onBeforeUnmount(() => {
@@ -104,35 +108,30 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 20px;
   position: relative;
-  height: 200px;
+  height: 600px;
   width: 100%;
+  overflow: hidden;
 }
 
 .skewed-container {
   background: #003B45;
-  width: 250px;
-  height: 150px;
-  transform: skewX(-15deg);
+  width: 600px;
+  height: 300px;
+  flex-shrink: 0;
+  transform: skewX(-15deg) translateX(100vw);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 80px;
+  font-size: 120px;
   font-weight: 700;
   color: white;
-  animation: slideInFromRight 0.6s ease-out forwards;
   opacity: 0;
-  transform: skewX(-15deg) translateX(100px);
+  transition: transform 0.8s ease-out, opacity 0.8s ease-out;
 }
 
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: skewX(-15deg) translateX(100px);
-  }
-  to {
-    opacity: 1;
-    transform: skewX(-15deg) translateX(0);
-  }
+.skewed-container.container-visible {
+  opacity: 1;
+  transform: skewX(-15deg) translateX(0);
 }
 
 /* Responsive adjustments */

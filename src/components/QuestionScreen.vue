@@ -16,27 +16,32 @@
     
     <transition name="question-fade" mode="out-in">
       <div v-if="showQuestionContent" class="quiz-screen" :class="timerBackgroundClass">
-        <div class="question-overlay">
-          <div class="question-header row mb-4">
-            <div class="col-12">
-              <!-- Timer Section -->
-              <div class="timer-section">
-                <div class="timer-bar-container">
-                  <div class="progress">
-                    <div 
-                      class="progress-bar" 
-                      :class="timerColorClass"
-                      role="progressbar" 
-                      :style="{ width: `${(timeRemaining / 30) * 100}%` }"
-                    ></div>
-                  </div>
-                  <div class="timer-text-display">
-                    {{ timeRemaining }} SECOND{{ timeRemaining !== 1 ? 'S' : '' }}
-                  </div>
-                </div>
+        <!-- Timer Section -->
+        <div class="timer-section">
+          <div class="timer-bar-container">
+            <!-- Segmented Timer Bars -->
+            <div class="segmented-timer">
+              <div 
+                v-for="segment in 6" 
+                :key="segment"
+                class="timer-segment-container"
+              >
+                <div 
+                  class="timer-segment-fill"
+                  :style="{ 
+                    backgroundColor: getSegmentColor(segment),
+                    width: getSegmentFillPercentage(segment) + '%'
+                  }"
+                ></div>
               </div>
             </div>
+            <div class="timer-text-display" :style="{ backgroundColor: getTimerDisplayColor() }">
+              <span class="timer-number">{{ timeRemaining }}</span>
+            </div>
+            <div class="timer-sec-label">SEC</div>
           </div>
+        </div>
+        <div class="question-overlay">
           <div class="corner-home-button">
             <img src="/back-to-home.png" alt="Home" class="corner-home" @click="$emit('playAgain')">
           </div>
@@ -137,6 +142,11 @@
                 </div>
               </div>
             </transition>
+            
+            <!-- Times Up Image - shows when question timed out -->
+            <div v-if="showExplanation && selectedAnswer === null" class="times-up-container">
+              <img src="/timesup.png" alt="Time's Up" class="times-up-image">
+            </div>
           </div>
         </div>
         
@@ -203,6 +213,53 @@ const shouldShowFineprintPrepend = computed(() => {
   const questionsWithPrepend = [3, 4, 5, 6, 7];
   return questionsWithPrepend.includes(props.question?.id) && !props.showExplanation;
 });
+
+// Function to get segment fill percentage (each segment = 5 seconds)
+const getSegmentFillPercentage = (segmentNumber) => {
+  const secondsPerSegment = 5;
+  const secondsFromStart = 30 - props.timeRemaining;
+  const segmentsCompleted = Math.floor(secondsFromStart / secondsPerSegment);
+  
+  if (segmentNumber <= segmentsCompleted) {
+    // This segment is completely filled
+    return 100;
+  } else if (segmentNumber === segmentsCompleted + 1) {
+    // This segment is currently filling
+    const progressInCurrentSegment = secondsFromStart % secondsPerSegment;
+    return (progressInCurrentSegment / secondsPerSegment) * 100;
+  } else {
+    // This segment hasn't started filling yet
+    return 0;
+  }
+};
+
+// Function to get segment color based on time remaining
+const getSegmentColor = (segmentNumber) => {
+  const fillPercentage = getSegmentFillPercentage(segmentNumber);
+  if (fillPercentage === 0) {
+    return '#999999'; // Gray for empty segments
+  }
+  
+  // Change color based on time remaining (same logic as original timer)
+  if (props.timeRemaining <= 18) {
+    return '#F44336'; // Red
+  } else if (props.timeRemaining <= 24) {
+    return '#FF9800'; // Orange/Yellow
+  } else {
+    return '#8BC34A'; // Green
+  }
+};
+
+// Function to get timer display background color
+const getTimerDisplayColor = () => {
+  if (props.timeRemaining <= 18) {
+    return '#F44336'; // Red
+  } else if (props.timeRemaining <= 24) {
+    return '#FF9800'; // Orange/Yellow
+  } else {
+    return '#8BC34A'; // Green
+  }
+};
 
 const props = defineProps({
   question: {
@@ -786,6 +843,7 @@ h2 {
 .question-content {
   max-width: 100%;
   padding: 0;
+  padding-top: 20px;
   margin: 0;
 }
 
@@ -795,6 +853,19 @@ h2 {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+/* Times Up Image */
+.times-up-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.times-up-image {
+  width: 1492.168px;
+  height: 155px;
 }
 
 .explanation-banner-skewed {
@@ -1074,15 +1145,41 @@ h2 {
 
 /* TIMER STYLES */
 .timer-section {
+  position: absolute;
+  top: 39px;
+  right: 53px;
   width: 400px;
-  margin-left: auto;
 }
 
 .timer-bar-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 15px;
 }
+
+/* Segmented Timer Styles */
+.segmented-timer {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.timer-segment-container {
+  height: 12px;
+  flex: 1;
+  background-color: #999999;
+  transform: skewX(-15deg);
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-segment-fill {
+  height: 100%;
+  transition: width 1s linear, background-color 0.3s ease;
+  transform: skewX(15deg);
+  transform-origin: left;
+}
+
 
 .progress {
   height: 12px;
@@ -1116,13 +1213,37 @@ h2 {
 }
 
 .timer-text-display {
+  background-color: #8BC34A;
   color: white;
   font-weight: bold;
   font-size: 16px;
   text-transform: uppercase;
   white-space: nowrap;
-  min-width: 80px;
-  text-align: right;
+  min-width: 60px;
+  text-align: center;
+  padding: 2px;
+  transform: skewX(-15deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-sec-label {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-left: 5px;
+}
+
+.timer-number {
+  transform: skewX(15deg);
+  width: 30px;
+  height: 35px;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* IMPROVED QUESTION WRAPPER TRANSITIONS */
@@ -1416,7 +1537,13 @@ h2 {
 }
 
 .addl-info-btn:hover {
-  background-color: #ffd966;
+  background-color: rgba(0, 59, 69, 0.90);
+}
+
+.addl-info-btn:active,
+.addl-info-btn:focus {
+  background-color: rgba(0, 59, 69, 0.90);
+  outline: none;
 }
 
 .explanation-desc {
