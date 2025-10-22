@@ -1,5 +1,5 @@
 <template>
-  <div class="countdown-container">
+  <div class="countdown-container" :class="{ 'fade-out': isComplete }">
     <!-- AstraZeneca Logo -->
     <div class="logo-container">
       <img src="/AZLOGO.png" alt="AstraZeneca" class="az-logo">
@@ -39,6 +39,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 const words = ['Ready,', 'Set,', 'WIN!'];
 const currentWord = ref('');
 const currentStep = ref(0);
+const isComplete = ref(false);
 const emit = defineEmits(['complete']);
 let interval = null;
 
@@ -53,18 +54,22 @@ onMounted(() => {
   setTimeout(() => {
     currentStep.value = 2;
     currentWord.value = words[1]; // "Set,"
-  }, 1000);
+  }, 1500);
   
   // Step 3: Container 3 slides in + "WIN!"
   setTimeout(() => {
     currentStep.value = 3;
     currentWord.value = words[2]; // "WIN!"
-  }, 2000);
+  }, 2500);
   
-  // Complete after brief pause
+  // Start fade out after brief pause
   setTimeout(() => {
-    emit('complete');
-  }, 3000);
+    isComplete.value = true;
+    // Emit complete after fade out finishes
+    setTimeout(() => {
+      emit('complete');
+    }, 500); // Wait for fade-out animation to complete
+  }, 4000);
 });
 
 onBeforeUnmount(() => {
@@ -83,6 +88,29 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   font-family: 'PF Fuel Grime', sans-serif;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.countdown-container.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .logo-container {

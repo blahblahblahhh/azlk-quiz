@@ -38,7 +38,7 @@
             <div class="timer-text-display" :style="{ backgroundColor: getTimerDisplayColor() }">
               <span class="timer-number">{{ timeRemaining }}</span>
             </div>
-            <div class="timer-sec-label">SEC</div>
+            <div class="timer-sec-label" :style="{ color: getTimerDisplayColor() }">SEC</div>
           </div>
         </div>
         <div class="question-overlay">
@@ -214,22 +214,21 @@ const shouldShowFineprintPrepend = computed(() => {
   return questionsWithPrepend.includes(props.question?.id) && !props.showExplanation;
 });
 
-// Function to get segment fill percentage (each segment = 5 seconds)
+// Function to get segment fill percentage (each segment = 5 seconds) - starts full and empties
 const getSegmentFillPercentage = (segmentNumber) => {
   const secondsPerSegment = 5;
-  const secondsFromStart = 30 - props.timeRemaining;
-  const segmentsCompleted = Math.floor(secondsFromStart / secondsPerSegment);
+  const segmentsEmptied = Math.floor((30 - props.timeRemaining) / secondsPerSegment);
   
-  if (segmentNumber <= segmentsCompleted) {
-    // This segment is completely filled
-    return 100;
-  } else if (segmentNumber === segmentsCompleted + 1) {
-    // This segment is currently filling
-    const progressInCurrentSegment = secondsFromStart % secondsPerSegment;
-    return (progressInCurrentSegment / secondsPerSegment) * 100;
-  } else {
-    // This segment hasn't started filling yet
+  if (segmentNumber <= segmentsEmptied) {
+    // This segment is completely empty
     return 0;
+  } else if (segmentNumber === segmentsEmptied + 1) {
+    // This segment is currently emptying
+    const progressInCurrentSegment = (30 - props.timeRemaining) % secondsPerSegment;
+    return 100 - (progressInCurrentSegment / secondsPerSegment) * 100;
+  } else {
+    // This segment is still full
+    return 100;
   }
 };
 
@@ -240,24 +239,24 @@ const getSegmentColor = (segmentNumber) => {
     return '#999999'; // Gray for empty segments
   }
   
-  // Change color based on time remaining (same logic as original timer)
-  if (props.timeRemaining <= 18) {
-    return '#F44336'; // Red
-  } else if (props.timeRemaining <= 24) {
-    return '#FF9800'; // Orange/Yellow
+  // Change color based on time remaining (10 second intervals)
+  if (props.timeRemaining <= 10) {
+    return '#CC3401'; // Red (10-0 seconds)
+  } else if (props.timeRemaining <= 20) {
+    return '#B19A02'; // Yellow (20-10 seconds)
   } else {
-    return '#8BC34A'; // Green
+    return '#809400'; // Green (30-20 seconds)
   }
 };
 
 // Function to get timer display background color
 const getTimerDisplayColor = () => {
-  if (props.timeRemaining <= 18) {
-    return '#F44336'; // Red
-  } else if (props.timeRemaining <= 24) {
-    return '#FF9800'; // Orange/Yellow
+  if (props.timeRemaining <= 10) {
+    return '#CC3401'; // Red (10-0 seconds)
+  } else if (props.timeRemaining <= 20) {
+    return '#B19A02'; // Yellow (20-10 seconds)
   } else {
-    return '#8BC34A'; // Green
+    return '#809400'; // Green (30-20 seconds)
   }
 };
 
@@ -609,6 +608,16 @@ watch(() => props.showExplanation, (showExplanation) => {
   position: relative;
   overflow: hidden;
   transition: background 0.5s ease;
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Background images replaced with video background */
@@ -768,11 +777,7 @@ h2 {
   width: 342px;
 }
 
-.answer-option-skewed:hover {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transform: skew(-15deg) translateY(-2px);
-}
+/* Hover state removed */
 
 .answer-option-skewed .option-text-with-icon {
   transform: skew(32deg);
@@ -1179,7 +1184,8 @@ h2 {
   height: 100%;
   transition: width 1s linear, background-color 0.3s ease;
   transform: skewX(32deg);
-  transform-origin: left;
+  transform-origin: right;
+  margin-left: auto;
 }
 
 

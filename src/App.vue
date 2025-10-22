@@ -213,13 +213,24 @@ function resetGame() {
   /* background-color: var(--background-color); */
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.screen-fade-enter-active {
+  transition: opacity 0.4s ease-in;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.screen-fade-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.screen-fade-enter-from,
+.screen-fade-leave-to {
+  opacity: 0;
+}
+
+.screen-fade-appear-active {
+  transition: opacity 0.4s ease-in;
+}
+
+.screen-fade-appear-from {
   opacity: 0;
 }
 

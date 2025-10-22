@@ -176,7 +176,7 @@ function goBackFromTOS() {
   animation: blink 1s infinite;
   pointer-events: none;
   z-index: 1;
-  left: 50%;
+  left: 55%;
   transform: translateX(-130px);
   line-height: 82%;
   height: 122.371px;
