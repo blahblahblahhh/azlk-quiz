@@ -18,15 +18,15 @@
       >
         <!-- Container 1 -->
         <div class="skewed-container">
-          1
+          <span class="number">1</span>
         </div>
         <!-- Container 2 -->
         <div class="skewed-container">
-          2
+          <span class="number">2</span>
         </div>
         <!-- Container 3 -->
         <div class="skewed-container">
-          3
+          <span class="number">3</span>
         </div>
       </div>
     </div>
@@ -160,9 +160,13 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+}
+
+.number {
+  transform: skewX(32deg);
   font-size: 200px;
   font-weight: 700;
-  color: white;
 }
 
 /* Responsive adjustments */
