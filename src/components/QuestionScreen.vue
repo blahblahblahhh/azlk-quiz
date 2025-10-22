@@ -157,7 +157,7 @@
               class="addl-info-btn"
               @click="toggleAdditionalInfo"
             >
-              <span>Abbreviations & References</span>
+              <span>Abbreviations And References</span>
             </button>
             <div v-if="showAdditionalInfo" class="explanation-desc">
               <img :class="['question-content', 'question-' + question.id + ' explanation-desc-img']" :src="['/question-' + question.id + '-notes.png']">
@@ -166,7 +166,7 @@
         </transition>
         
         <!-- Fineprint Prepend Image (visible for specific questions when explanation is NOT showing) -->
-        <img v-if="shouldShowFineprintPrepend" src="/fineprint-prepend.png" class="fineprint-prepend">
+        <img v-if="shouldShowFineprintPrepend" :src="`/fineprint-prepend-${question.id}.png`" class="fineprint-prepend">
         
         <transition name="fade">
           <div v-if="showExplanation && question.finePrint && question.finePrint.trim()" :class="['question-' + question.id + ' fine-print']">
@@ -467,16 +467,18 @@ function checkQuestionImage() {
 // Video segment durations for each question (in seconds)
 function getVideoDuration(questionIndex) {
   const durations = [
-    5, // Question 1: 5 seconds (0:00 to 0:05)
-    6, // Question 2: 6 seconds (0:05 to 0:11)  
-    4, // Question 3: 4 seconds (0:11 to 0:15)
-    6, // Question 4: 6 seconds (0:15 to 0:21)
-    5, // Question 5: 5 seconds (0:21 to 0:26)
-    5, // Question 6: 5 seconds (0:26 to 0:31)
-    10 // Question 7: 10 seconds (0:31 to end, or reasonable duration)
+    2, // Question 1: 2 seconds (0:00 to 0:02)
+    4, // Question 2: 4 seconds (0:02 to 0:06)
+    5, // Question 3: 5 seconds (0:05 to 0:10)
+    6, // Question 4: 6 seconds (0:09 to 0:15)
+    5, // Question 5: 6 seconds (0:14 to 0:20)
+    5, // Question 6: 6 seconds (0:20 to 0:26)
+    5, // Question 7: 6 seconds (0:26 to 0:32)
+    6, // Question 8: 7 seconds (0:32 to 0:39)
+    10 // Remaining questions: 10 seconds (default)
   ];
   
-  return durations[questionIndex] || 5;
+  return durations[questionIndex] || 10;
 }
 
 function startVideoFromBeginning() {
@@ -689,7 +691,7 @@ h2 {
   width: 218.83px;
   height: 39.94px;
   flex-shrink: 0; 
-  transform: skew(-15deg);
+  transform: skew(-32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -697,7 +699,7 @@ h2 {
 
 /* Counter-skew the text inside the badge */
 .question-number-badge span {
-  transform: skew(15deg);
+  transform: skew(32deg);
 }
 
 /* Question Text */
@@ -751,7 +753,7 @@ h2 {
   height: 98px;
   background: rgba(255, 255, 255, 0.70);
   border: 2px solid #25575F;
-  transform: skew(-15deg);
+  transform: skew(-32deg);
   cursor: pointer;
   position: relative;
   display: flex;
@@ -773,7 +775,7 @@ h2 {
 }
 
 .answer-option-skewed .option-text-with-icon {
-  transform: skew(15deg);
+  transform: skew(32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -873,7 +875,7 @@ h2 {
   min-height: 132px;
   padding: 35px;
   background-color: #00917D;
-  transform: skew(-15deg);
+  transform: skew(-32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -882,7 +884,7 @@ h2 {
 }
 
 .explanation-banner-skewed .explanation-content {
-  transform: skew(15deg);
+  transform: skew(32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1168,7 +1170,7 @@ h2 {
   height: 12px;
   flex: 1;
   background-color: #999999;
-  transform: skewX(-15deg);
+  transform: skewX(-32deg);
   position: relative;
   overflow: hidden;
 }
@@ -1176,7 +1178,7 @@ h2 {
 .timer-segment-fill {
   height: 100%;
   transition: width 1s linear, background-color 0.3s ease;
-  transform: skewX(15deg);
+  transform: skewX(32deg);
   transform-origin: left;
 }
 
@@ -1222,7 +1224,7 @@ h2 {
   min-width: 60px;
   text-align: center;
   padding: 2px;
-  transform: skewX(-15deg);
+  transform: skewX(-32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1237,7 +1239,7 @@ h2 {
 }
 
 .timer-number {
-  transform: skewX(15deg);
+  transform: skewX(32deg);
   width: 30px;
   height: 35px;
   font-size: 30px;
@@ -1508,7 +1510,7 @@ h2 {
   letter-spacing: -0.3px;
   text-transform: uppercase;
   background: rgba(0, 59, 69, 0.90);
-  transform: skew(-15deg);
+  transform: skew(-32deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1516,24 +1518,24 @@ h2 {
 }
 
 .addl-info-btn span {
-  transform: skew(15deg) !important;
+  transform: skew(32deg) !important;
   display: inline-block;
 }
 
 .addl-info-btn::after {
   content: "";
-  height: 34px;
-  width: 34px;
+  width: 22px;
+  height: 14px;
   background-image: url('/drawer.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  transform: skew(15deg);
+  transform: skew(32deg);
   transition: transform 0.3s ease;
 }
 
 .active .addl-info-btn::after {
-  transform: skew(15deg) rotate(180deg);
+  transform: skew(32deg) rotate(180deg);
 }
 
 .addl-info-btn:hover {
@@ -1560,11 +1562,11 @@ h2 {
   font-style: normal;
   font-weight: 700;
   line-height: 17px;
-  transform: skew(-15deg);
+  transform: skew(-32deg);
 }
 
 .explanation-desc img {
-  transform: skew(15deg);
+  transform: skew(32deg);
   width: 100%;
 }
 
@@ -1608,18 +1610,19 @@ h2 {
 
 .button-container {
     position: absolute;
-    right: 0px;
+    right: -50px;
     bottom: 92px;
 }
 
 .button-container button.btn.btn-primary.btn-lg {
-    height: 68px;
-    width: 253px;
-    border-radius: 0;
-    transform: skew(-15deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 68px;
+  width: 310px;
+  border-radius: 0;
+  transform: skew(-32deg);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0px 50px;
 }
 
 .button-container button.btn.btn-primary.btn-lg span {
@@ -1636,7 +1639,7 @@ h2 {
 
 .button-container button.btn.btn-primary.btn-lg span,
 .button-container button.btn.btn-primary.btn-lg img {
-    transform: skew(15deg);
+    transform: skew(32deg);
 }
 
 .question-text {

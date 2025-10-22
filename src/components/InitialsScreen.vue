@@ -25,14 +25,19 @@
     
     <!-- Initials input area -->
     <div class="initials-input-area">
-      <input
-        type="text"
-        v-model="initials"
-        maxlength="3"
-        placeholder="XXX"
-        class="initials-input"
-        @input="formatInitials"
-      />
+      <div class="input-container">
+        <span v-if="!initials" class="blinking-cursor">⎸</span>
+        <input
+          ref="initialsInput"
+          type="text"
+          v-model="initials"
+          maxlength="3"
+          placeholder="XXX"
+          class="initials-input"
+          @input="formatInitials"
+          autofocus
+        />
+      </div>
     </div>
     
     <!-- Continue button overlay -->
@@ -45,11 +50,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 
 const initials = ref('');
 const showTOS = ref(false);
+const initialsInput = ref(null);
 const emit = defineEmits(['continue', 'back', 'home']);
+
+onMounted(async () => {
+  await nextTick();
+  if (initialsInput.value) {
+    initialsInput.value.focus();
+  }
+});
 
 function formatInitials(event) {
   initials.value = event.target.value.toUpperCase().replace(/[^A-Z]/g, '');
@@ -138,6 +151,45 @@ function goBackFromTOS() {
   width: 100%;
   height: 100%;
   outline: none;
+  caret-color: transparent;
+}
+
+.initials-input:focus {
+  caret-color: transparent;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blinking-cursor {
+  position: absolute;
+  color: #25575F;
+  font-size: 149.233px;
+  font-weight: 700;
+  font-family: 'PF Fuel Grime', sans-serif;
+  animation: blink 1s infinite;
+  pointer-events: none;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-130px);
+  line-height: 82%;
+  height: 122.371px;
+  overflow: hidden;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
 }
 
 .initials-input::placeholder {

@@ -11,18 +11,23 @@
     </div>
     
     <!-- Animated Skewed Containers -->
-    <div class="skewed-containers">
-      <!-- Container 1 -->
-      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 1 }">
-        1
-      </div>
-      <!-- Container 2 -->
-      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 2 }">
-        2
-      </div>
-      <!-- Container 3 -->
-      <div class="skewed-container" :class="{ 'container-visible': currentStep >= 3 }">
-        3
+    <div class="skewed-containers-viewport">
+      <div 
+        class="skewed-containers-marquee" 
+        :style="{ transform: `translateX(${100 - (currentStep * 100)}vw)` }"
+      >
+        <!-- Container 1 -->
+        <div class="skewed-container">
+          1
+        </div>
+        <!-- Container 2 -->
+        <div class="skewed-container">
+          2
+        </div>
+        <!-- Container 3 -->
+        <div class="skewed-container">
+          3
+        </div>
       </div>
     </div>
   </div>
@@ -102,36 +107,34 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.skewed-containers {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+.skewed-containers-viewport {
   position: relative;
-  height: 600px;
-  width: 100%;
+  height: 584.461px;
+  width: 100vw;
   overflow: hidden;
+}
+
+.skewed-containers-marquee {
+  display: flex;
+  width: 3600px;
+  height: 584.461px;
+  transition: transform 2.5s ease-out;
+  transform: translateX(100vw);
+  gap: 20px;
 }
 
 .skewed-container {
   background: #003B45;
-  width: 600px;
-  height: 300px;
+  width: 1168.175px;
+  height: 584.461px;
   flex-shrink: 0;
-  transform: skewX(-15deg) translateX(100vw);
+  transform: skewX(-32deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 120px;
+  font-size: 200px;
   font-weight: 700;
   color: white;
-  opacity: 0;
-  transition: transform 0.8s ease-out, opacity 0.8s ease-out;
-}
-
-.skewed-container.container-visible {
-  opacity: 1;
-  transform: skewX(-15deg) translateX(0);
 }
 
 /* Responsive adjustments */
