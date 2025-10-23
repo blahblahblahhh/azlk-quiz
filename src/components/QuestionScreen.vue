@@ -466,15 +466,13 @@ function checkQuestionImage() {
 // Video segment durations for each question (in seconds)
 function getVideoDuration(questionIndex) {
   const durations = [
-    2, // Question 1: 2 seconds (0:00 to 0:02)
-    4, // Question 2: 4 seconds (0:02 to 0:06)
-    5, // Question 3: 5 seconds (0:05 to 0:10)
-    6, // Question 4: 6 seconds (0:09 to 0:15)
-    5, // Question 5: 6 seconds (0:14 to 0:20)
-    5, // Question 6: 6 seconds (0:20 to 0:26)
-    5, // Question 7: 6 seconds (0:26 to 0:32)
-    6, // Question 8: 7 seconds (0:32 to 0:39)
-    10 // Remaining questions: 10 seconds (default)
+    5, // Question 1: 5 seconds (0:00 to 0:05)
+    6, // Question 2: 6 seconds (0:05 to 0:11)
+    4, // Question 3: 4 seconds (0:11 to 0:15)
+    6, // Question 4: 6 seconds (0:15 to 0:21)
+    5, // Question 5: 5 seconds (0:21 to 0:26)
+    5, // Question 6: 5 seconds (0:26 to 0:31)
+    10 // Question 7: 10 seconds (0:31 to end, or reasonable duration)
   ];
   
   return durations[questionIndex] || 10;
