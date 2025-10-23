@@ -87,7 +87,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  font-family: 'PF Fuel Grime', sans-serif;
+  font-family: "Bebas Neue Pro", sans-serif;
   animation: fadeIn 0.5s ease-in;
 }
 

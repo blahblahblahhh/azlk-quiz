@@ -147,7 +147,7 @@ function goBackFromTOS() {
   line-height: 82%; /* 122.371px */
   letter-spacing: -2.985px;
   text-align: center;
-  font-family: 'PF Fuel Grime', sans-serif;
+  font-family: "Bebas Neue Pro", sans-serif;
   width: 100%;
   height: 100%;
   outline: none;
@@ -172,7 +172,7 @@ function goBackFromTOS() {
   color: #25575F;
   font-size: 149.233px;
   font-weight: 700;
-  font-family: 'PF Fuel Grime', sans-serif;
+  font-family: "Bebas Neue Pro", sans-serif;
   animation: blink 1s infinite;
   pointer-events: none;
   z-index: 1;
@@ -199,7 +199,7 @@ function goBackFromTOS() {
   font-weight: 700;
   line-height: 82%; /* 122.371px */
   letter-spacing: -2.985px;
-  font-family: 'PF Fuel Grime', sans-serif;
+  font-family: "Bebas Neue Pro", sans-serif;
 }
 
 /* Continue button - bottom right */

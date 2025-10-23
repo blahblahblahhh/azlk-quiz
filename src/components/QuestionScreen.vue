@@ -15,7 +15,7 @@
     </video>
     
     <transition name="question-fade" mode="out-in">
-      <div v-if="showQuestionContent" class="quiz-screen" :class="timerBackgroundClass">
+      <div v-if="showQuestionContent && !gameStore.state.playingFinalVideo" class="quiz-screen" :class="timerBackgroundClass">
         <!-- Timer Section -->
         <div class="timer-section">
           <div class="timer-bar-container">
@@ -178,7 +178,7 @@
         <div class="button-container text-center mt-4">
           <button 
             class="btn btn-primary btn-lg"
-            @click="$emit('next')"
+            @click="handleNextClick"
             :disabled="!selectedAnswer && timeRemaining > 0 && !showExplanation"
           >
             <span>{{ isLastQuestion ? 'Finish' : 'Next Question' }}</span>
@@ -333,6 +333,17 @@ function handleAnswer(answer) {
   emit('answer', answer);
 }
 
+function handleNextClick() {
+  if (isLastQuestion.value) {
+    // On last question, trigger final video sequence
+    gameStore.state.playingFinalVideo = true;
+    playFinalVideoSegment();
+  } else {
+    // Normal next question
+    emit('next');
+  }
+}
+
 function toggleAdditionalInfo() {
   gameStore.state.showAdditionalInfo = !gameStore.state.showAdditionalInfo;
 }
@@ -466,13 +477,15 @@ function checkQuestionImage() {
 // Video segment durations for each question (in seconds)
 function getVideoDuration(questionIndex) {
   const durations = [
-    5, // Question 1: 5 seconds (0:00 to 0:05)
-    6, // Question 2: 6 seconds (0:05 to 0:11)
-    4, // Question 3: 4 seconds (0:11 to 0:15)
-    6, // Question 4: 6 seconds (0:15 to 0:21)
-    5, // Question 5: 5 seconds (0:21 to 0:26)
-    5, // Question 6: 5 seconds (0:26 to 0:31)
-    10 // Question 7: 10 seconds (0:31 to end, or reasonable duration)
+    2, // Question 1: 2 seconds (0:00 to 0:02)
+    4, // Question 2: 4 seconds (0:02 to 0:06)
+    5, // Question 3: 5 seconds (0:05 to 0:10)
+    6, // Question 4: 6 seconds (0:09 to 0:15)
+    5, // Question 5: 6 seconds (0:14 to 0:20)
+    5, // Question 6: 6 seconds (0:20 to 0:26)
+    5, // Question 7: 6 seconds (0:26 to 0:32)
+    6, // Question 8: 7 seconds (0:32 to 0:39)
+    10 // Remaining questions: 10 seconds (default)
   ];
   
   return durations[questionIndex] || 10;
@@ -585,6 +598,38 @@ watch(() => props.showExplanation, (showExplanation) => {
     stopVideo();
   }
 });
+
+// Watch for final video playing state
+watch(() => gameStore.state.playingFinalVideo, (playingFinalVideo) => {
+  if (playingFinalVideo) {
+    playFinalVideoSegment();
+  }
+});
+
+function playFinalVideoSegment() {
+  if (!backgroundVideo.value || !videoReady.value) {
+    // If video not ready, go directly to results
+    gameStore.finishGame();
+    return;
+  }
+  
+  console.log('Playing final video segment...');
+  showQuestionContent.value = false;
+  
+  // Play the final video segment (7 seconds at 0:32 to 0:39)
+  backgroundVideo.value.play().then(() => {
+    setTimeout(() => {
+      if (backgroundVideo.value) {
+        backgroundVideo.value.pause();
+      }
+      // Transition to results screen
+      gameStore.finishGame();
+    }, 7000); // 7 seconds for question 8
+  }).catch(() => {
+    // If video fails, go directly to results
+    gameStore.finishGame();
+  });
+}
 </script>
 
 <style scoped>

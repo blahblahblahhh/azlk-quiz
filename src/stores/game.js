@@ -203,7 +203,8 @@ export const useGameStore = defineStore('game', () => {
     showExplanation: false,
     showAdditionalInfo: false,
     showFinePrint: false,
-    isFromResultsScreen: false
+    isFromResultsScreen: false,
+    playingFinalVideo: false // Track when playing final video segment
   });
 
   const timer = ref(null);
@@ -341,10 +342,17 @@ export const useGameStore = defineStore('game', () => {
       state.value.currentQuestionIndex++;
       startTimer();
     } else {
+      // This shouldn't be reached for the last question since it's handled by the finish button
       stopTimer();
       state.value.currentScreen = 'result';
       addToLeaderboard();
     }
+  }
+
+  function finishGame() {
+    state.value.playingFinalVideo = false;
+    state.value.currentScreen = 'result';
+    addToLeaderboard();
   }
 
   // Updated to include correctAnswers in the leaderboard entry
@@ -417,6 +425,7 @@ export const useGameStore = defineStore('game', () => {
     stopTimer,
     handleAnswerSubmit,
     nextQuestion,
+    finishGame,
     resetGame,
     toggleFinePrint,
     viewLeaderboardFromResults
