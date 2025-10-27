@@ -270,20 +270,39 @@ export const useGameStore = defineStore('game', () => {
   async function initializeQuestions() {
     console.log('Initializing questions...');
     
-    // Reverting to original code that selects first 3 + random 4:
-   const firstThree = questions.slice(0, 3);
-   const remaining = questions.slice(3);
-   const shuffled = remaining.sort(() => Math.random() - 0.5);
-   const randomFour = shuffled.slice(0, 4);
-   questionsList.value = [...firstThree, ...randomFour];
+    // Q1-3 are set for everyone
+    const firstThree = questions.slice(0, 3); // Questions 1, 2, 3
     
-    // The temporary code that kept first 3 and added all remaining:
-  //  const firstThree = questions.slice(0, 3);
-    // const remaining = questions.slice(3);
-    // questionsList.value = [...firstThree, ...remaining];
+    // Q4&5 - randomly select one or the other (not both)
+    const q4and5 = questions.slice(3, 5); // Questions 4, 5
+    const selectedFromQ4and5 = q4and5[Math.floor(Math.random() * 2)]; // Pick one randomly
+    
+    // Q13&14 - randomly select one or the other (not both)
+    const q13and14 = questions.slice(12, 14); // Questions 13, 14 (indices 12, 13)
+    const selectedFromQ13and14 = q13and14[Math.floor(Math.random() * 2)]; // Pick one randomly
+    
+    // Remaining questions (Q6-12 and Q15-18)
+    const remainingQuestions = [
+      ...questions.slice(5, 12), // Questions 6-12 (indices 5-11)
+      ...questions.slice(14)     // Questions 15+ (indices 14+)
+    ];
+    
+    // Shuffle remaining questions and select 3 to make total of 7
+    const shuffledRemaining = remainingQuestions.sort(() => Math.random() - 0.5);
+    const selectedRemaining = shuffledRemaining.slice(0, 3);
+    
+    // Combine all selected questions
+    questionsList.value = [
+      ...firstThree,
+      selectedFromQ4and5,
+      selectedFromQ13and14,
+      ...selectedRemaining
+    ];
     
     await nextTick();
     console.log('Questions initialized:', questionsList.value);
+    console.log('Selected Q4 or Q5:', selectedFromQ4and5.id);
+    console.log('Selected Q13 or Q14:', selectedFromQ13and14.id);
     return questionsList.value;
   }
 
