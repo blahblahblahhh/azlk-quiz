@@ -269,6 +269,19 @@ export const useGameStore = defineStore('game', () => {
 
   async function initializeQuestions() {
     console.log('Initializing questions...');
+
+    // OG LOGIC - can just comment this in and comment out the other for testing
+    // Original code that selects first 3 + random 4:
+    //  const firstThree = questions.slice(0, 3);
+    //  const remaining = questions.slice(3);
+    //  const shuffled = remaining.sort(() => Math.random() - 0.5);
+    //  const randomFour = shuffled.slice(0, 4);
+    //  questionsList.value = [...firstThree, ...randomFour];
+    
+    // First 3 and all remaining (all questions)
+    //  const firstThree = questions.slice(0, 3);
+    // const remaining = questions.slice(3);
+    // questionsList.value = [...firstThree, ...remaining];
     
     // Q1-3 are set for everyone
     const firstThree = questions.slice(0, 3); // Questions 1, 2, 3
