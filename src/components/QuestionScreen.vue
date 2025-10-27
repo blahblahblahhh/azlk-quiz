@@ -1,6 +1,6 @@
 <template>
   <!-- Wrapper div with v-if/v-else -->
-  <div v-if="question">
+  <div v-if="question" :class="{ 'fade-out-to-results': isFadingOut }">
     <!-- Video Background -->
     <video 
       ref="backgroundVideo"
@@ -207,6 +207,7 @@ const backgroundVideo = ref(null);
 const videoReady = ref(false);
 const showQuestionContent = ref(false);
 const questionImageExists = ref(false);
+const isFadingOut = ref(false);
 
 // Questions that should show the fineprint prepend image
 const shouldShowFineprintPrepend = computed(() => {
@@ -608,8 +609,8 @@ watch(() => gameStore.state.playingFinalVideo, (playingFinalVideo) => {
 
 function playFinalVideoSegment() {
   if (!backgroundVideo.value || !videoReady.value) {
-    // If video not ready, go directly to results
-    gameStore.finishGame();
+    // If video not ready, fade out and go to results
+    fadeToResults();
     return;
   }
   
@@ -622,13 +623,21 @@ function playFinalVideoSegment() {
       if (backgroundVideo.value) {
         backgroundVideo.value.pause();
       }
-      // Transition to results screen
-      gameStore.finishGame();
+      // Fade out and transition to results screen
+      fadeToResults();
     }, 7000); // 7 seconds for question 8
   }).catch(() => {
-    // If video fails, go directly to results
-    gameStore.finishGame();
+    // If video fails, fade out and go to results
+    fadeToResults();
   });
+}
+
+function fadeToResults() {
+  isFadingOut.value = true;
+  // Wait for fade-out animation to complete, then transition to results
+  setTimeout(() => {
+    gameStore.finishGame();
+  }, 600); // Wait for fade-out to complete
 }
 </script>
 
@@ -660,6 +669,19 @@ function playFinalVideoSegment() {
   }
   to {
     opacity: 1;
+  }
+}
+
+.fade-out-to-results {
+  animation: fadeOutToResults 0.6s ease-out forwards;
+}
+
+@keyframes fadeOutToResults {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 

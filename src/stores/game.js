@@ -300,9 +300,9 @@ export const useGameStore = defineStore('game', () => {
       ...questions.slice(14)     // Questions 15+ (indices 14+)
     ];
     
-    // Shuffle remaining questions and select 3 to make total of 7
+    // Shuffle remaining questions and select 2 to make total of 7
     const shuffledRemaining = remainingQuestions.sort(() => Math.random() - 0.5);
-    const selectedRemaining = shuffledRemaining.slice(0, 3);
+    const selectedRemaining = shuffledRemaining.slice(0, 2);
     
     // Combine all selected questions
     questionsList.value = [
@@ -435,7 +435,8 @@ export const useGameStore = defineStore('game', () => {
       showExplanation: false,
       showAdditionalInfo: false,
       showFinePrint: false,
-      isFromResultsScreen: false
+      isFromResultsScreen: false,
+      playingFinalVideo: false // Reset final video state
     };
     initializeQuestions();
   }
