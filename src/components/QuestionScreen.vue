@@ -478,15 +478,15 @@ function checkQuestionImage() {
 // Video segment durations for each question (in seconds)
 function getVideoDuration(questionIndex) {
   const durations = [
-    2, // Question 1: 2 seconds (0:00 to 0:02)
-    4, // Question 2: 4 seconds (0:02 to 0:06)
-    5, // Question 3: 5 seconds (0:05 to 0:10)
-    6, // Question 4: 6 seconds (0:09 to 0:15)
-    5, // Question 5: 6 seconds (0:14 to 0:20)
-    5, // Question 6: 6 seconds (0:20 to 0:26)
-    5, // Question 7: 6 seconds (0:26 to 0:32)
-    6, // Question 8: 7 seconds (0:32 to 0:39)
-    10 // Remaining questions: 10 seconds (default)
+    0.5, // Question 1: 0.5 seconds (0:00 to 0:00.5) - appears paused but plays 0.5s
+    4.5, // Question 2: 4.5 seconds (0:00.5 to 0:05)
+    5,   // Question 3: 5 seconds (0:05 to 0:10)
+    5,   // Question 4: 5 seconds (0:10 to 0:15)
+    6,   // Question 5: 6 seconds (0:15 to 0:21)
+    5,   // Question 6: 5 seconds (0:21 to 0:26)
+    6,   // Question 7: 6 seconds (0:26 to 0:32)
+    7,   // After Q7: 7 seconds (0:32 to 0:39)
+    10   // Remaining questions: 10 seconds (default)
   ];
   
   return durations[questionIndex] || 10;
@@ -1621,7 +1621,7 @@ h2 {
 
 .explanation-desc {
   background-color: #25575F;
-  padding: 20px 150px 20px 50px;
+  padding: 20px 150px 30px 75px;
   overflow-y: auto;
   width: 100%;
   min-width: 1143.236px;
@@ -1642,7 +1642,7 @@ h2 {
 }
 
 .explanation-desc img {
-  width: 100%;
+  max-width: 889.78px !important;
 }
 
 .fine-print {
@@ -1831,5 +1831,22 @@ h2 {
   width: 1492px;
   height: 103px;
   flex-shrink: 0;
+}
+
+.question-5 .question-image,
+.question-9 .question-image,
+.question-10 .question-image,
+.question-11 .question-image {
+  max-width: 1764px;
+  margin: 0 auto;
+}
+
+.question-12 .question-image,
+.question-13 .question-image,
+.question-14 .question-image,
+.question-15 .question-image,
+.question-16 .question-image {
+  max-width: 1664px;
+  margin: 0 auto;
 }
 </style>
