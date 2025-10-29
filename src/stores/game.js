@@ -379,9 +379,9 @@ export const useGameStore = defineStore('game', () => {
       // Timer will be started by the QuestionScreen component after video timing
     } else {
       // This shouldn't be reached for the last question since it's handled by the finish button
+      // But just in case, we'll finish the game properly
       stopTimer();
-      state.value.currentScreen = 'result';
-      addToLeaderboard();
+      finishGame();
     }
   }
 

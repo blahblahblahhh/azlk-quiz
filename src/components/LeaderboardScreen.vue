@@ -6,51 +6,51 @@
     <!-- Leaderboard Grid -->
     <div class="leaderboard-grid">
       <!-- Row 1 -->
-      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(1) }">1</div>
-      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.score ?? 'XXXX' }}</div>
-      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.initials || 'JVG' }}</div>
-      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.correctAnswers || '6' }}</div>
-      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ formatTime(getPlayerByRank(1)) }}</div>
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1) ? '1' : '' }}</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.score ?? '' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.initials || '' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1)?.correctAnswers || '' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(1) }">{{ getPlayerByRank(1) ? formatTime(getPlayerByRank(1)) : '' }}</div>
       <div class="grid-arrow">
         <div v-if="isCurrentPlayer(1)" class="current-player-arrow"></div>
       </div>
 
       <!-- Row 2 -->
-      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(2) }">2</div>
-      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.score ?? 'XXXX' }}</div>
-      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.initials || 'JVG' }}</div>
-      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.correctAnswers || '6' }}</div>
-      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ formatTime(getPlayerByRank(2)) }}</div>
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2) ? '2' : '' }}</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.score ?? '' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.initials || '' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2)?.correctAnswers || '' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(2) }">{{ getPlayerByRank(2) ? formatTime(getPlayerByRank(2)) : '' }}</div>
       <div class="grid-arrow">
         <div v-if="isCurrentPlayer(2)" class="current-player-arrow"></div>
       </div>
 
       <!-- Row 3 -->
-      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(3) }">3</div>
-      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.score ?? 'XXXX' }}</div>
-      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.initials || 'JVG' }}</div>
-      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.correctAnswers || '6' }}</div>
-      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ formatTime(getPlayerByRank(3)) }}</div>
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3) ? '3' : '' }}</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.score ?? '' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.initials || '' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3)?.correctAnswers || '' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(3) }">{{ getPlayerByRank(3) ? formatTime(getPlayerByRank(3)) : '' }}</div>
       <div class="grid-arrow">
         <div v-if="isCurrentPlayer(3)" class="current-player-arrow"></div>
       </div>
 
       <!-- Row 4 -->
-      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(4) }">4</div>
-      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.score ?? 'XXXX' }}</div>
-      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.initials || 'JVG' }}</div>
-      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.correctAnswers || '5' }}</div>
-      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ formatTime(getPlayerByRank(4)) }}</div>
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4) ? '4' : '' }}</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.score ?? '' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.initials || '' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4)?.correctAnswers || '' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(4) }">{{ getPlayerByRank(4) ? formatTime(getPlayerByRank(4)) : '' }}</div>
       <div class="grid-arrow">
         <div v-if="isCurrentPlayer(4)" class="current-player-arrow"></div>
       </div>
 
       <!-- Row 5 -->
-      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(5) }">5</div>
-      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.score ?? 'XXXX' }}</div>
-      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.initials || 'JVG' }}</div>
-      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.correctAnswers || '5' }}</div>
-      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ formatTime(getPlayerByRank(5)) }}</div>
+      <div class="grid-rank" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5) ? '5' : '' }}</div>
+      <div class="grid-points" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.score ?? '' }}</div>
+      <div class="grid-name" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.initials || '' }}</div>
+      <div class="grid-answers" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5)?.correctAnswers || '' }}</div>
+      <div class="grid-time" :class="{ 'current-player-text': isCurrentPlayer(5) }">{{ getPlayerByRank(5) ? formatTime(getPlayerByRank(5)) : '' }}</div>
       <div class="grid-arrow">
         <div v-if="isCurrentPlayer(5)" class="current-player-arrow"></div>
       </div>
@@ -101,20 +101,56 @@ onMounted(async () => {
 });
 
 function processLeaderboard() {
-  // Use the database leaderboard data
+  // Use the database leaderboard data and remove duplicates
   let allEntries = [...gameStore.leaderboard];
+  
+  // Remove duplicate entries (same initials, score, and close timestamps)
+  const deduplicatedEntries = [];
+  const seen = new Set();
+  
+  allEntries.forEach(entry => {
+    const key = `${entry.initials}-${entry.score}`;
+    
+    // If we've seen this combination before, check if it's a recent duplicate
+    const existingEntry = deduplicatedEntries.find(e => 
+      e.initials === entry.initials && 
+      e.score === entry.score &&
+      Math.abs(new Date(e.date) - new Date(entry.date)) < 10000 // within 10 seconds
+    );
+    
+    if (!existingEntry) {
+      deduplicatedEntries.push(entry);
+    } else {
+      // Keep the more recent entry if it's a duplicate
+      const existingIndex = deduplicatedEntries.indexOf(existingEntry);
+      if (new Date(entry.date) > new Date(existingEntry.date)) {
+        deduplicatedEntries[existingIndex] = entry;
+      }
+    }
+  });
+  
+  allEntries = deduplicatedEntries;
   
   // If coming from results screen, mark the current player in the existing leaderboard
   if (props.isFromResultsScreen && props.currentPlayer?.initials) {
-    // Find and mark the current player's entry in the leaderboard instead of adding a duplicate
-    allEntries = allEntries.map(entry => {
-      // Match by initials, score, and recent timestamp (within last few seconds)
+    // Find all matching entries and mark only the most recent one as current player
+    const matchingEntries = allEntries.filter(entry => {
       const isRecentEntry = entry.date && new Date() - new Date(entry.date) < 5000; // 5 seconds
-      const isCurrentPlayer = entry.initials === props.currentPlayer.initials && 
-                             entry.score === props.currentPlayer.score && 
-                             isRecentEntry;
-      return isCurrentPlayer ? { ...entry, isCurrentPlayer: true } : entry;
+      return entry.initials === props.currentPlayer.initials && 
+             entry.score === props.currentPlayer.score && 
+             isRecentEntry;
     });
+    
+    if (matchingEntries.length > 0) {
+      // Sort by date to find the most recent entry
+      matchingEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const mostRecentEntry = matchingEntries[0];
+      
+      // Mark only the most recent matching entry as current player
+      allEntries = allEntries.map(entry => {
+        return entry === mostRecentEntry ? { ...entry, isCurrentPlayer: true } : entry;
+      });
+    }
   }
   
   // Sort by score (descending)
@@ -155,7 +191,7 @@ function isCurrentPlayer(rank) {
 
 function formatTime(player) {
   if (!player || !player.bonusTimeScore) {
-    return '2:00';
+    return '';
   }
   
   // Calculate time taken (30 seconds max per question * 7 questions = 210 seconds total)

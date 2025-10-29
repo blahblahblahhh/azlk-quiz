@@ -47,6 +47,7 @@ export async function saveScore(playerData) {
       score: playerData.score,
       type: playerData.type,
       bonusTimeScore: playerData.bonusTimeScore || 0,
+      correctAnswers: playerData.correctAnswers || 0,
       date: new Date().toISOString()
     };
     
