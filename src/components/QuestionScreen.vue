@@ -1713,6 +1713,7 @@ h2 {
   align-items: center;
   justify-content: flex-start;
   padding: 0px 50px;
+  gap: 15px;
 }
 
 .button-container button.btn.btn-primary.btn-lg span {
