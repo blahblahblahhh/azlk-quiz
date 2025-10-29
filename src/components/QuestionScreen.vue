@@ -17,30 +17,32 @@
     <transition name="question-fade" mode="out-in">
       <div v-if="showQuestionContent && !gameStore.state.playingFinalVideo" class="quiz-screen" :class="timerBackgroundClass">
         <!-- Timer Section -->
-        <div class="timer-section">
-          <div class="timer-bar-container">
-            <!-- Segmented Timer Bars -->
-            <div class="segmented-timer">
-              <div 
-                v-for="segment in 6" 
-                :key="segment"
-                class="timer-segment-container"
-              >
+        <transition name="fade-in-options">
+          <div v-if="showOptionsAndTimer" class="timer-section">
+            <div class="timer-bar-container">
+              <!-- Segmented Timer Bars -->
+              <div class="segmented-timer">
                 <div 
-                  class="timer-segment-fill"
-                  :style="{ 
-                    backgroundColor: getSegmentColor(segment),
-                    width: getSegmentFillPercentage(segment) + '%'
-                  }"
-                ></div>
+                  v-for="segment in 6" 
+                  :key="segment"
+                  class="timer-segment-container"
+                >
+                  <div 
+                    class="timer-segment-fill"
+                    :style="{ 
+                      backgroundColor: getSegmentColor(segment),
+                      width: getSegmentFillPercentage(segment) + '%'
+                    }"
+                  ></div>
+                </div>
               </div>
+              <div class="timer-text-display" :style="{ backgroundColor: getTimerDisplayColor() }">
+                <span class="timer-number">{{ timeRemaining }}</span>
+              </div>
+              <div class="timer-sec-label" :style="{ color: getTimerDisplayColor() }">SEC</div>
             </div>
-            <div class="timer-text-display" :style="{ backgroundColor: getTimerDisplayColor() }">
-              <span class="timer-number">{{ timeRemaining }}</span>
-            </div>
-            <div class="timer-sec-label" :style="{ color: getTimerDisplayColor() }">SEC</div>
           </div>
-        </div>
+        </transition>
         <div class="question-overlay">
           <div class="corner-home-button">
             <img src="/back-to-home.png" alt="Home" class="corner-home" @click="$emit('playAgain')">
@@ -57,7 +59,8 @@
             <h2 v-else class="question-proper" v-html="question.text"></h2>
             
             <!-- Answer Options Grid -->
-            <div class="answer-options-grid" :class="{ 'four-options': question.options.length === 4 }">
+            <transition name="fade-in-options">
+              <div v-if="showOptionsAndTimer" class="answer-options-grid" :class="{ 'four-options': question.options.length === 4 }">
               <!-- Four options in one row -->
               <div v-if="question.options.length === 4" class="answer-option-row-four">
                 <div
@@ -126,7 +129,8 @@
                   </div>
                 </div>
               </template>
-            </div>
+              </div>
+            </transition>
             
             <!-- Explanation Banner - positioned below questions -->
             <transition name="explanation-slide-up">
@@ -206,6 +210,7 @@ const showNotes = ref(false);
 const backgroundVideo = ref(null);
 const videoReady = ref(false);
 const showQuestionContent = ref(false);
+const showOptionsAndTimer = ref(false);
 const questionImageExists = ref(false);
 const isFadingOut = ref(false);
 
@@ -498,12 +503,12 @@ function startVideoFromBeginning() {
   const duration = getVideoDuration(0) * 1000; // Convert to milliseconds
   console.log(`Starting video from beginning - will play for ${duration/1000} seconds`);
   showQuestionContent.value = false;
+  showOptionsAndTimer.value = false;
   
   backgroundVideo.value.play().then(() => {
     console.log('Video started playing');
     
     // For Question 1: play video, then pause and show question (original behavior)
-    // For other questions: show question 3 seconds after video starts
     setTimeout(() => {
       if (backgroundVideo.value) {
         backgroundVideo.value.pause();
@@ -512,12 +517,19 @@ function startVideoFromBeginning() {
       console.log('Showing question content after video ends');
       showQuestionContent.value = true;
       
-      // Start timer immediately after video ends for Question 1
-      console.log('Starting timer now');
-      gameStore.startTimer();
+      // Fade in options and timer after a brief delay
+      setTimeout(() => {
+        console.log('Fading in options and timer');
+        showOptionsAndTimer.value = true;
+        
+        // Start timer after options appear
+        console.log('Starting timer now');
+        gameStore.startTimer();
+      }, 500);
     }, duration);
   }).catch(() => {
     showQuestionContent.value = true;
+    showOptionsAndTimer.value = true;
     gameStore.startTimer();
   });
 }
@@ -525,6 +537,7 @@ function startVideoFromBeginning() {
 function continueVideo() {
   if (!backgroundVideo.value || !videoReady.value) {
     showQuestionContent.value = true;
+    showOptionsAndTimer.value = true;
     gameStore.startTimer();
     return;
   }
@@ -532,6 +545,7 @@ function continueVideo() {
   const duration = getVideoDuration(props.currentQuestionIndex) * 1000; // Convert to milliseconds
   console.log(`Continuing video from current position - will play for ${duration/1000} seconds`);
   showQuestionContent.value = false;
+  showOptionsAndTimer.value = false;
   
   backgroundVideo.value.play().then(() => {
     console.log('Video continued playing');
@@ -542,17 +556,24 @@ function continueVideo() {
       showQuestionContent.value = true;
     }, 3000);
     
-    // Start timer ONLY when video segment stops playing
+    // When video ends, pause and fade in options/timer
     setTimeout(() => {
       if (backgroundVideo.value) {
         backgroundVideo.value.pause();
         console.log('Video paused');
       }
-      console.log('Starting timer now - video has ended');
-      gameStore.startTimer();
+      console.log('Fading in options and timer');
+      showOptionsAndTimer.value = true;
+      
+      // Start timer after options appear
+      setTimeout(() => {
+        console.log('Starting timer now - video has ended');
+        gameStore.startTimer();
+      }, 500);
     }, duration);
   }).catch(() => {
     showQuestionContent.value = true;
+    showOptionsAndTimer.value = true;
     gameStore.startTimer();
   });
 }
@@ -575,6 +596,7 @@ watch(() => props.currentQuestionIndex, (newIndex, oldIndex) => {
     if (newIndex === 0 && oldIndex === undefined) {
       // First question of the game - start from beginning
       showQuestionContent.value = false;
+      showOptionsAndTimer.value = false;
       if (videoReady.value) {
         startVideoFromBeginning();
       } else {
@@ -584,6 +606,7 @@ watch(() => props.currentQuestionIndex, (newIndex, oldIndex) => {
             startVideoFromBeginning();
           } else {
             showQuestionContent.value = true;
+            showOptionsAndTimer.value = true;
             gameStore.startTimer();
           }
         }, 500);
@@ -591,6 +614,7 @@ watch(() => props.currentQuestionIndex, (newIndex, oldIndex) => {
     } else if (oldIndex !== undefined) {
       // Transitioning between questions - continue video
       showQuestionContent.value = false;
+      showOptionsAndTimer.value = false;
       setTimeout(() => {
         continueVideo();
       }, 300);
@@ -1487,6 +1511,23 @@ h2 {
 
 .fade-enter-from,
 .fade-leave-to {
+  opacity: 0;
+}
+
+/* Fade in options transition */
+.fade-in-options-enter-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-in-options-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-in-options-enter-from {
+  opacity: 0;
+}
+
+.fade-in-options-leave-to {
   opacity: 0;
 }
 
