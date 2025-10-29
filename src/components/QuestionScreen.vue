@@ -500,11 +500,20 @@ function startVideoFromBeginning() {
   showQuestionContent.value = false;
   
   backgroundVideo.value.play().then(() => {
+    console.log('Video started playing');
+    
+    // For Question 1: play video, then pause and show question (original behavior)
+    // For other questions: show question 3 seconds after video starts
     setTimeout(() => {
       if (backgroundVideo.value) {
         backgroundVideo.value.pause();
+        console.log('Video paused');
       }
+      console.log('Showing question content after video ends');
       showQuestionContent.value = true;
+      
+      // Start timer immediately after video ends for Question 1
+      console.log('Starting timer now');
       gameStore.startTimer();
     }, duration);
   }).catch(() => {
@@ -525,11 +534,21 @@ function continueVideo() {
   showQuestionContent.value = false;
   
   backgroundVideo.value.play().then(() => {
+    console.log('Video continued playing');
+    
+    // Show question 3 seconds after video starts playing
+    setTimeout(() => {
+      console.log('Showing question content (3 seconds after video start)');
+      showQuestionContent.value = true;
+    }, 3000);
+    
+    // Start timer ONLY when video segment stops playing
     setTimeout(() => {
       if (backgroundVideo.value) {
         backgroundVideo.value.pause();
+        console.log('Video paused');
       }
-      showQuestionContent.value = true;
+      console.log('Starting timer now - video has ended');
       gameStore.startTimer();
     }, duration);
   }).catch(() => {

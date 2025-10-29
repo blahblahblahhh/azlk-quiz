@@ -365,6 +365,10 @@ export const useGameStore = defineStore('game', () => {
       return;
     }
 
+    // Stop current timer and reset time
+    stopTimer();
+    state.value.timeRemaining = 30;
+    
     state.value.showExplanation = false;
     state.value.showAdditionalInfo = false;
     state.value.showFinePrint = false;
@@ -372,7 +376,7 @@ export const useGameStore = defineStore('game', () => {
     
     if (state.value.currentQuestionIndex < questionsList.value.length - 1) {
       state.value.currentQuestionIndex++;
-      startTimer();
+      // Timer will be started by the QuestionScreen component after video timing
     } else {
       // This shouldn't be reached for the last question since it's handled by the finish button
       stopTimer();

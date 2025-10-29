@@ -173,7 +173,7 @@ async function handleCountdownComplete() {
 
     // Proceed with game
     state.value.currentScreen = 'question';
-    gameStore.startTimer();
+    // Timer will be started by the QuestionScreen component after video timing
   } catch (error) {
     console.error('Error starting game:', error);
     state.value.currentScreen = 'welcome';
