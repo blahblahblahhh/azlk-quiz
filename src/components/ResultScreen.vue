@@ -76,7 +76,7 @@ defineEmits(['viewLeaderboard', 'playAgain']);
   position: absolute;
   top: 155px;
   left: 780px;
-  width: ⁨;
+  min-width: 300px;
   color: #FFC130;
   font-family: 'PF Fuel Grime', sans-serif;
   color: #AA8306;
