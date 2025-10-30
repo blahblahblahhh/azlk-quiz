@@ -204,7 +204,8 @@ export const useGameStore = defineStore('game', () => {
     showAdditionalInfo: false,
     showFinePrint: false,
     isFromResultsScreen: false,
-    playingFinalVideo: false // Track when playing final video segment
+    playingFinalVideo: false, // Track when playing final video segment
+    region: null // Track selected region (ASN or AHA)
   });
 
   const timer = ref(null);
@@ -268,54 +269,89 @@ export const useGameStore = defineStore('game', () => {
   }
 
   async function initializeQuestions() {
-    console.log('Initializing questions...');
+    console.log('Initializing questions for region:', state.value.region);
 
-    // OG LOGIC - can just comment this in and comment out the other for testing
-    // Original code that selects first 3 + random 4:
-    //  const firstThree = questions.slice(0, 3);
-    //  const remaining = questions.slice(3);
-    //  const shuffled = remaining.sort(() => Math.random() - 0.5);
-    //  const randomFour = shuffled.slice(0, 4);
-    //  questionsList.value = [...firstThree, ...randomFour];
-    
-    // First 3 and all remaining (all questions)
-    //  const firstThree = questions.slice(0, 3);
-    // const remaining = questions.slice(3);
-    // questionsList.value = [...firstThree, ...remaining];
-    
-    // Q1-3 are set for everyone
+    // Q1-3 are the same for both regions
     const firstThree = questions.slice(0, 3); // Questions 1, 2, 3
     
-    // Q4&5 - randomly select one or the other (not both)
-    const q4and5 = questions.slice(3, 5); // Questions 4, 5
-    const selectedFromQ4and5 = q4and5[Math.floor(Math.random() * 2)]; // Pick one randomly
-    
-    // Q13&14 - randomly select one or the other (not both)
-    const q13and14 = questions.slice(12, 14); // Questions 13, 14 (indices 12, 13)
-    const selectedFromQ13and14 = q13and14[Math.floor(Math.random() * 2)]; // Pick one randomly
-    
-    // Remaining questions (Q6-12 and Q15-18)
-    const remainingQuestions = [
-      ...questions.slice(5, 12), // Questions 6-12 (indices 5-11)
-      ...questions.slice(14)     // Questions 15+ (indices 14+)
-    ];
-    
-    // Shuffle remaining questions and select 2 to make total of 7
-    const shuffledRemaining = remainingQuestions.sort(() => Math.random() - 0.5);
-    const selectedRemaining = shuffledRemaining.slice(0, 2);
-    
-    // Combine all selected questions
-    questionsList.value = [
-      ...firstThree,
-      selectedFromQ4and5,
-      selectedFromQ13and14,
-      ...selectedRemaining
-    ];
+    if (state.value.region === 'ASN') {
+      // ASN Houston: Questions 4-12
+      console.log('Initializing ASN Houston questions (4-12)');
+      
+      // Q4&5 - randomly select one or the other (not both)
+      const q4and5 = questions.slice(3, 5); // Questions 4, 5
+      const selectedFromQ4and5 = q4and5[Math.floor(Math.random() * 2)]; // Pick one randomly
+      
+      // Questions 6-12 (indices 5-11)
+      const asnQuestions = questions.slice(5, 12); // Questions 6-12
+      
+      // Shuffle ASN questions and select enough to make total of 7
+      const shuffledASN = asnQuestions.sort(() => Math.random() - 0.5);
+      const selectedASN = shuffledASN.slice(0, 3); // Select 3 more to make 7 total (1-3 + 4or5 + 3 more)
+      
+      // Combine all selected questions
+      questionsList.value = [
+        ...firstThree,
+        selectedFromQ4and5,
+        ...selectedASN
+      ];
+      
+      console.log('Selected Q4 or Q5:', selectedFromQ4and5.id);
+      
+    } else if (state.value.region === 'AHA') {
+      // AHA New Orleans: Questions 13-18
+      console.log('Initializing AHA New Orleans questions (13-18)');
+      
+      // Q13&14 - randomly select one or the other (not both)
+      const q13and14 = questions.slice(12, 14); // Questions 13, 14 (indices 12, 13)
+      const selectedFromQ13and14 = q13and14[Math.floor(Math.random() * 2)]; // Pick one randomly
+      
+      // Questions 15-18 (indices 14-17)
+      const ahaQuestions = questions.slice(14, 18); // Questions 15-18
+      
+      // Use all AHA questions to make total of 7
+      questionsList.value = [
+        ...firstThree,
+        selectedFromQ13and14,
+        ...ahaQuestions
+      ];
+      
+      console.log('Selected Q13 or Q14:', selectedFromQ13and14.id);
+      
+    } else {
+      // Fallback to original logic if no region is set
+      console.log('No region set, using original question logic');
+      
+      // Q4&5 - randomly select one or the other (not both)
+      const q4and5 = questions.slice(3, 5); // Questions 4, 5
+      const selectedFromQ4and5 = q4and5[Math.floor(Math.random() * 2)]; // Pick one randomly
+      
+      // Q13&14 - randomly select one or the other (not both)
+      const q13and14 = questions.slice(12, 14); // Questions 13, 14 (indices 12, 13)
+      const selectedFromQ13and14 = q13and14[Math.floor(Math.random() * 2)]; // Pick one randomly
+      
+      // Remaining questions (Q6-12 and Q15-18)
+      const remainingQuestions = [
+        ...questions.slice(5, 12), // Questions 6-12 (indices 5-11)
+        ...questions.slice(14)     // Questions 15+ (indices 14+)
+      ];
+      
+      // Shuffle remaining questions and select 2 to make total of 7
+      const shuffledRemaining = remainingQuestions.sort(() => Math.random() - 0.5);
+      const selectedRemaining = shuffledRemaining.slice(0, 2);
+      
+      // Combine all selected questions
+      questionsList.value = [
+        ...firstThree,
+        selectedFromQ4and5,
+        selectedFromQ13and14,
+        ...selectedRemaining
+      ];
+    }
     
     await nextTick();
     console.log('Questions initialized:', questionsList.value);
-    console.log('Selected Q4 or Q5:', selectedFromQ4and5.id);
-    console.log('Selected Q13 or Q14:', selectedFromQ13and14.id);
+    console.log('Total questions:', questionsList.value.length);
     return questionsList.value;
   }
 
@@ -425,8 +461,14 @@ export const useGameStore = defineStore('game', () => {
     state.value.currentScreen = 'leaderboard';
   }
 
+  function setRegion(region) {
+    console.log('Setting region to:', region);
+    state.value.region = region;
+  }
+
   function resetGame() {
     stopTimer();
+    const currentRegion = state.value.region; // Preserve region during reset
     state.value = {
       currentScreen: 'welcome',
       playerInitials: '',
@@ -440,7 +482,8 @@ export const useGameStore = defineStore('game', () => {
       showAdditionalInfo: false,
       showFinePrint: false,
       isFromResultsScreen: false,
-      playingFinalVideo: false // Reset final video state
+      playingFinalVideo: false, // Reset final video state
+      region: currentRegion // Preserve the selected region
     };
     initializeQuestions();
   }
@@ -464,6 +507,7 @@ export const useGameStore = defineStore('game', () => {
     nextQuestion,
     finishGame,
     resetGame,
+    setRegion,
     toggleFinePrint,
     viewLeaderboardFromResults
   };

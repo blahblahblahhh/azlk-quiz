@@ -12,6 +12,15 @@
       @viewLeaderboard="handleViewLeaderboard"
       @playAgain="resetGame"
     />
+    
+    <!-- Admin Modal -->
+    <AdminModal
+      :showModal="showAdminModal"
+      :isAdminMode="isAdminMode"
+      @regionSelected="handleRegionSelected"
+      @close="closeAdminModal"
+      @reset="handleRegionReset"
+    />
   </div>
   <div class="az-footer">
     <!-- <span v-if="currentComponent === WelcomeScreen">©2025 AstraZeneca. All rights reserved. US-96433 Last Updated 1/25</span>
@@ -31,14 +40,42 @@ import CountdownScreen from './components/CountdownScreen.vue';
 import QuestionScreen from './components/QuestionScreen.vue';
 import ResultScreen from './components/ResultScreen.vue';
 import LeaderboardScreen from './components/LeaderboardScreen.vue';
+import AdminModal from './components/AdminModal.vue';
 
 const gameStore = useGameStore();
 const { state, currentQuestion, playerType, leaderboard, questionsList } = storeToRefs(gameStore);
 const isLoading = ref(false);
 
+// Admin modal state
+const showAdminModal = ref(false);
+const isAdminMode = ref(false);
+const currentRegion = ref(null);
+
 // Initialize questions when the app starts
 onMounted(() => {
   console.log('App mounted - initializing questions');
+  
+  // Check URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const isAdminParam = urlParams.has('admin');
+  
+  // Get stored region
+  const storedRegion = localStorage.getItem('quizRegion');
+  
+  if (isAdminParam) {
+    // Admin mode - always show modal
+    isAdminMode.value = true;
+    showAdminModal.value = true;
+  } else if (!storedRegion) {
+    // No region set - show modal to select region
+    isAdminMode.value = false;
+    showAdminModal.value = true;
+  } else {
+    // Region already set - use it
+    currentRegion.value = storedRegion;
+    gameStore.setRegion(storedRegion);
+  }
+  
   gameStore.initializeQuestions();
 });
 
@@ -204,6 +241,33 @@ function handleViewLeaderboard() {
 
 function resetGame() {
   gameStore.resetGame();
+}
+
+// Admin modal handlers
+function handleRegionSelected(region) {
+  console.log('Region selected:', region);
+  currentRegion.value = region;
+  gameStore.setRegion(region);
+  showAdminModal.value = false;
+  
+  // Re-initialize questions with new region
+  gameStore.initializeQuestions();
+}
+
+function closeAdminModal() {
+  // Only allow closing in admin mode
+  if (isAdminMode.value) {
+    showAdminModal.value = false;
+  }
+}
+
+function handleRegionReset() {
+  console.log('Region reset');
+  currentRegion.value = null;
+  gameStore.setRegion(null);
+  
+  // Modal stays open for new region selection
+  // showAdminModal.value remains true
 }
 </script>
 
