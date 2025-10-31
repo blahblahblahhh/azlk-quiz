@@ -17,6 +17,7 @@
     <AdminModal
       :showModal="showAdminModal"
       :isAdminMode="isAdminMode"
+      :currentRegion="currentRegion"
       @regionSelected="handleRegionSelected"
       @close="closeAdminModal"
       @reset="handleRegionReset"
@@ -62,6 +63,12 @@ onMounted(() => {
   // Get stored region
   const storedRegion = localStorage.getItem('quizRegion');
   
+  // Set current region if it exists
+  if (storedRegion) {
+    currentRegion.value = storedRegion;
+    gameStore.setRegion(storedRegion);
+  }
+  
   if (isAdminParam) {
     // Admin mode - always show modal
     isAdminMode.value = true;
@@ -70,10 +77,6 @@ onMounted(() => {
     // No region set - show modal to select region
     isAdminMode.value = false;
     showAdminModal.value = true;
-  } else {
-    // Region already set - use it
-    currentRegion.value = storedRegion;
-    gameStore.setRegion(storedRegion);
   }
   
   gameStore.initializeQuestions();

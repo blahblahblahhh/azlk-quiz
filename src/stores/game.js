@@ -309,11 +309,14 @@ export const useGameStore = defineStore('game', () => {
       // Questions 15-18 (indices 14-17)
       const ahaQuestions = questions.slice(14, 18); // Questions 15-18
       
-      // Use all AHA questions to make total of 7
+      // Shuffle AHA questions and select 3 to make total of 7 (1-3 + 13or14 + 3 more)
+      const shuffledAHA = ahaQuestions.sort(() => Math.random() - 0.5);
+      const selectedAHA = shuffledAHA.slice(0, 3); // Select 3 from Q15-18 to make 7 total
+      
       questionsList.value = [
         ...firstThree,
         selectedFromQ13and14,
-        ...ahaQuestions
+        ...selectedAHA
       ];
       
       console.log('Selected Q13 or Q14:', selectedFromQ13and14.id);

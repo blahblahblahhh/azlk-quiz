@@ -10,6 +10,9 @@
       </div>
       
       <div class="modal-content">
+        <div v-if="currentRegion" class="current-region-display">
+          <p><strong>Current Region:</strong> {{ currentRegion }} {{ currentRegion === 'ASN' ? '(Houston)' : '(New Orleans)' }}</p>
+        </div>
         <p>Please select the region for this quiz session:</p>
         
         <div class="region-buttons">
@@ -51,6 +54,10 @@ const props = defineProps({
   isAdminMode: {
     type: Boolean,
     default: false
+  },
+  currentRegion: {
+    type: String,
+    default: null
   }
 });
 
@@ -160,6 +167,22 @@ function resetRegion() {
 
 .close-button:hover {
   background-color: #f0f0f0;
+}
+
+.current-region-display {
+  background: #e8f4fd;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.current-region-display p {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #003B45;
 }
 
 .modal-content p {
