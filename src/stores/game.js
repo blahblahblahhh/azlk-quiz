@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed, onMounted, nextTick } from 'vue';
-import { initDB, saveScore, getTopScores } from './db'; // Import DB functions
+import { initDB, saveScore, getTopScores, getAllScores, clearAllScores } from './db'; // Import DB functions
 
 // Questions data
 const questions = [
@@ -425,6 +425,14 @@ export const useGameStore = defineStore('game', () => {
   }
 
   function finishGame() {
+    console.log('finishGame called');
+    
+    // Prevent duplicate calls
+    if (state.value.currentScreen === 'result') {
+      console.log('finishGame: Already on result screen, skipping');
+      return;
+    }
+    
     state.value.playingFinalVideo = false;
     state.value.currentScreen = 'result';
     addToLeaderboard();
@@ -432,6 +440,8 @@ export const useGameStore = defineStore('game', () => {
 
   // Updated to include correctAnswers in the leaderboard entry
   async function addToLeaderboard() {
+    console.log('addToLeaderboard called');
+    
     const entry = {
       initials: state.value.playerInitials || 'AAA',
       score: state.value.score,
@@ -441,9 +451,13 @@ export const useGameStore = defineStore('game', () => {
       date: new Date().toISOString()
     };
     
+    console.log('Saving entry:', entry);
+    
     try {
       await saveScore(entry);
+      console.log('Score saved successfully');
       await loadLeaderboard(); // Refresh the leaderboard after adding a new score
+      console.log('Leaderboard refreshed');
     } catch (error) {
       console.error('Error saving score:', error);
       // Fallback to in-memory leaderboard if database fails
@@ -462,6 +476,64 @@ export const useGameStore = defineStore('game', () => {
   function viewLeaderboardFromResults() {
     state.value.isFromResultsScreen = true;
     state.value.currentScreen = 'leaderboard';
+  }
+
+  async function clearLeaderboard() {
+    console.log('Clearing leaderboard database...');
+    try {
+      await clearAllScores();
+      // Clear the in-memory leaderboard too
+      leaderboard.value = [];
+      console.log('Leaderboard cleared successfully');
+    } catch (error) {
+      console.error('Error clearing leaderboard:', error);
+      throw error;
+    }
+  }
+
+  async function exportLeaderboardCSV() {
+    console.log('Exporting leaderboard to CSV...');
+    try {
+      // Get all scores from database
+      const allScores = await getAllScores();
+      
+      if (allScores.length === 0) {
+        alert('No data to export. The leaderboard is empty.');
+        return;
+      }
+
+      // Create CSV content
+      const headers = ['Date', 'Initials', 'Score', 'Correct Answers', 'Bonus Time Score', 'Type'];
+      const csvContent = [
+        headers.join(','),
+        ...allScores.map(score => [
+          new Date(score.date).toLocaleString(),
+          score.initials,
+          score.score,
+          score.correctAnswers || 0,
+          score.bonusTimeScore || 0,
+          score.type || ''
+        ].join(','))
+      ].join('\n');
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `quiz-leaderboard-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      console.log('CSV export completed');
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      throw error;
+    }
   }
 
   function setRegion(region) {
@@ -512,6 +584,8 @@ export const useGameStore = defineStore('game', () => {
     resetGame,
     setRegion,
     toggleFinePrint,
-    viewLeaderboardFromResults
+    viewLeaderboardFromResults,
+    clearLeaderboard,
+    exportLeaderboardCSV
   };
 });

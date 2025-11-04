@@ -38,6 +38,26 @@
             </div>
           </button>
         </div>
+        
+        <!-- Admin Actions - only show in admin mode -->
+        <div v-if="isAdminMode" class="admin-actions">
+          <h3>Admin Actions</h3>
+          <div class="admin-buttons">
+            <button 
+              class="admin-button clear-button"
+              @click="clearLeaderboard"
+            >
+              Clear Leaderboard
+            </button>
+            
+            <button 
+              class="admin-button export-button"
+              @click="exportCSV"
+            >
+              Export CSV
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -61,7 +81,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['regionSelected', 'close', 'reset']);
+const emit = defineEmits(['regionSelected', 'close', 'reset', 'clearLeaderboard', 'exportCSV']);
 
 // Show close button only in admin mode (when region is already set)
 const showCloseButton = computed(() => props.isAdminMode);
@@ -84,6 +104,16 @@ function resetRegion() {
   
   // Emit reset event
   emit('reset');
+}
+
+function clearLeaderboard() {
+  if (confirm('Are you sure you want to clear all leaderboard data? This action cannot be undone.')) {
+    emit('clearLeaderboard');
+  }
+}
+
+function exportCSV() {
+  emit('exportCSV');
 }
 </script>
 
@@ -247,6 +277,62 @@ function resetRegion() {
   color: #666;
 }
 
+/* Admin Actions Section */
+.admin-actions {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #e9ecef;
+}
+
+.admin-actions h3 {
+  margin: 0 0 20px 0;
+  font-family: 'Bebas Neue Pro', sans-serif;
+  font-size: 24px;
+  color: #003B45;
+  text-align: center;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.admin-button {
+  background: #6c757d;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  min-width: 150px;
+}
+
+.admin-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.clear-button {
+  background: #dc3545;
+}
+
+.clear-button:hover {
+  background: #c82333;
+}
+
+.export-button {
+  background: #28a745;
+}
+
+.export-button:hover {
+  background: #218838;
+}
+
 @media (max-width: 768px) {
   .region-buttons {
     flex-direction: column;
@@ -254,6 +340,15 @@ function resetRegion() {
   }
   
   .region-button {
+    min-width: auto;
+  }
+  
+  .admin-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .admin-button {
     min-width: auto;
   }
   

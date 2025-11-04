@@ -102,3 +102,20 @@ export async function getAllScores() {
       request.onerror = () => reject(request.error);
     });
   }
+
+export async function clearAllScores() {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error("Database not initialized"));
+      return;
+    }
+    
+    const transaction = db.transaction([SCORES_STORE], 'readwrite');
+    const store = transaction.objectStore(SCORES_STORE);
+    
+    const request = store.clear();
+    
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}

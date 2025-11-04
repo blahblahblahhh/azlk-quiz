@@ -133,20 +133,18 @@ function processLeaderboard() {
   
   // If coming from results screen, mark the current player in the existing leaderboard
   if (props.isFromResultsScreen && props.currentPlayer?.initials) {
-    // Find all matching entries and mark only the most recent one as current player
+    // Find all matching entries based on initials and score
     const matchingEntries = allEntries.filter(entry => {
-      const isRecentEntry = entry.date && new Date() - new Date(entry.date) < 5000; // 5 seconds
       return entry.initials === props.currentPlayer.initials && 
-             entry.score === props.currentPlayer.score && 
-             isRecentEntry;
+             entry.score === props.currentPlayer.score;
     });
     
     if (matchingEntries.length > 0) {
-      // Sort by date to find the most recent entry
+      // If multiple matches, mark the most recent one
       matchingEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
       const mostRecentEntry = matchingEntries[0];
       
-      // Mark only the most recent matching entry as current player
+      // Mark the matching entry as current player
       allEntries = allEntries.map(entry => {
         return entry === mostRecentEntry ? { ...entry, isCurrentPlayer: true } : entry;
       });

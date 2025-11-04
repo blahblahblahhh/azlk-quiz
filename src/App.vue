@@ -21,6 +21,8 @@
       @regionSelected="handleRegionSelected"
       @close="closeAdminModal"
       @reset="handleRegionReset"
+      @clearLeaderboard="handleClearLeaderboard"
+      @exportCSV="handleExportCSV"
     />
   </div>
   <div class="az-footer">
@@ -271,6 +273,28 @@ function handleRegionReset() {
   
   // Modal stays open for new region selection
   // showAdminModal.value remains true
+}
+
+async function handleClearLeaderboard() {
+  console.log('Clearing leaderboard');
+  try {
+    // Clear the database
+    await gameStore.clearLeaderboard();
+    alert('Leaderboard cleared successfully!');
+  } catch (error) {
+    console.error('Error clearing leaderboard:', error);
+    alert('Error clearing leaderboard. Please try again.');
+  }
+}
+
+async function handleExportCSV() {
+  console.log('Exporting CSV');
+  try {
+    await gameStore.exportLeaderboardCSV();
+  } catch (error) {
+    console.error('Error exporting CSV:', error);
+    alert('Error exporting CSV. Please try again.');
+  }
 }
 </script>
 

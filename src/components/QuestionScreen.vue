@@ -342,8 +342,8 @@ function handleAnswer(answer) {
 function handleNextClick() {
   if (isLastQuestion.value) {
     // On last question, trigger final video sequence
+    // Only set the flag - the watcher will handle calling playFinalVideoSegment()
     gameStore.state.playingFinalVideo = true;
-    playFinalVideoSegment();
   } else {
     // Normal next question
     emit('next');
@@ -651,6 +651,14 @@ watch(() => gameStore.state.playingFinalVideo, (playingFinalVideo) => {
 });
 
 function playFinalVideoSegment() {
+  console.log('playFinalVideoSegment called');
+  
+  // Prevent multiple calls
+  if (gameStore.state.currentScreen === 'result') {
+    console.log('playFinalVideoSegment: Already on result screen, skipping');
+    return;
+  }
+  
   if (!backgroundVideo.value || !videoReady.value) {
     // If video not ready, fade out and go to results
     fadeToResults();
