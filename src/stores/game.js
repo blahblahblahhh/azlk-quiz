@@ -507,7 +507,7 @@ export const useGameStore = defineStore('game', () => {
       const csvContent = [
         headers.join(','),
         ...allScores.map(score => [
-          new Date(score.date).toLocaleString(),
+          `"${new Date(score.date).toLocaleString()}"`, // Quote date to handle commas
           score.initials,
           score.score,
           score.correctAnswers || 0,
