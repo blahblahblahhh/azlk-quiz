@@ -281,9 +281,4 @@ defineEmits(['playAgain']);
   margin-top: -45px;
 }
 
-/* hidden while they test the quiz */
-
-.grid-time {
-  visibility: hidden !important;
-}
 </style>
